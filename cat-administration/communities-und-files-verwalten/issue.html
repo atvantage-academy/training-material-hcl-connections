@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--
+  ATVANTAGE-Academy – EINZIGES Seitenlayout (Jekyll)
+  --------------------------------------------------
+  Ein Layout für alles: allgemeine Doku-Seiten UND Guides (Übungen/Anleitungen).
+  Optik nach der ATVANTAGE-Website: Meta-Nav, weiße sticky Kopfzeile, Hero-Band,
+  zweispaltig mit rechter Sidebar (automatisches Inhaltsverzeichnis, Fortschritt
+  aus Task-Listen, weiterführende Ressourcen). Überschriften ohne Emoji-Icons.
+
+  Verwendung im Front Matter:  layout: default   (oder `layout: guide` – Alias,
+  siehe guide.html; beides rendert dieselbe Guide-Ansicht)
+
+  `layout: visualization` (siehe visualization.html) rendert dieselbe Seite OHNE
+  obere Navigation (Meta-Leiste + Kopfzeile/TopNav), OHNE Brotkrumen und OHNE den
+  rechten Bereich (Inhaltsverzeichnis, Fortschritt, Ressourcen – auch bei gesetztem
+  `resources`), mit schmalerem Hero-Balken und breiterem, zentriertem Inhalt – für
+  eigenständige Visualisierungen/Simulationen.
+
+  Alle Front-Matter-Felder sind OPTIONAL (Convention over Configuration). Nur der
+  Titel ist faktisch erforderlich – als `title:` ODER als erste `#`-Überschrift:
+
+    title:       "…"                → sonst erste #-Überschrift (eins von beiden nötig)
+    description: "…"                → Meta-Description
+    duration:    8                  → Zahl in Minuten → Hero-Tag „ca. 8 Minuten“
+                                       (ungefähre LESEDAUER; bei Guides/Übungen die
+                                       Dauer der Übung, bei Visualisierungen die
+                                       Bearbeitungszeit – dort unüblich, aber erlaubt).
+    topics:      ["Cloud & DevOps"] → weitere Hero-Tags
+    resources:   [{title, url, icon}, …] → Sidebar-Karte „Weiterführende Informationen“.
+                                       title und/oder icon (Bildpfad); icon erscheint
+                                       rechts und wird kreisrund dargestellt.
+    breadcrumb:                     → Brotkrumen anpassen (beides optional):
+      label: "…"                    → überschreibt den Ordnernamen dieser Ebene;
+                                       in der Ordner-`index.md` gesetzt gilt es für
+                                       ALLE Seiten im Ordner und in Unterordnern.
+      ancestors: [{title, url}, …]  → explizite Vorfahren-Kette OHNE die aktuelle
+                                       Seite (diese wird automatisch angehängt); in
+                                       der `index.md` gesetzt wird sie vererbt.
+
+  „Markdown kopieren“ (Button im Hero) erscheint NUR auf Guides – dort ist das
+  Übernehmen des Quelltexts der Zweck. Bedingungen: Markdown-Seite (`.md`, nicht
+  reines HTML) UND der Schalter `toolbar.copy` (Vorgabe: nur `layout: guide`, siehe
+  `_includes/avd-switch.html`). Doku-Seiten und Visualisierungen haben ihn nicht –
+  bei letzteren, weil ihr Inhalt nicht sinnvoll als Markdown kopierbar ist.
+
+  DIE SEITENWERKZEUGE – QR-Code, Farbschema-Umschalter, Drucken – sind EINE
+  Komponente (`_includes/tools.html`) an zwei Standorten in diesem Rahmen:
+
+    Kopfzeile   `chrome: true`  (page, guide)      QR + Farbschema
+    Hero rechts `hero_tools`    (visualization)    QR + Farbschema + Drucken
+
+  Die Regel dahinter ist die Kopfzeile: Wo es sie gibt, tragen die Werkzeuge sie;
+  wo nicht, tritt der Hero an ihre Stelle. Drucken gibt es nur dort, weil auf einer
+  gewöhnlichen Seite der Browser-Befehl (Strg/Cmd+P) genügt, die rahmenlose
+  Ansicht aber keinen anderen Weg aufs Papier hat.
+
+  Der QR-Code wird erst im Browser erzeugt (theme/academy/atvantage.js), weil die
+  Adresse zur Build-Zeit nicht feststeht; ohne JavaScript erscheint er nicht.
+--><html lang="de">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Eine Community umhängen und aufräumen · HCL Connections (Academy)</title>
+<meta name="description" content="Struktur, Mitglieder und Sichtbarkeit einer Community ändern – und die Dateien einer inaktiven Person behandeln."><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1788958243">
+<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1788958243" defer></script>
+<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1788958243" defer></script>
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1788958243">
+<script type="module">
+  const _hlbase = "/training-material-hcl-connections/theme/academy/hljs/";
+  Promise.all([import(_hlbase + "core.min.js"), import(_hlbase + "java.min.js")])
+    .then(([core, java]) => {
+      const hljs = core.default;
+      hljs.registerLanguage("java", java.default);
+      document.querySelectorAll("pre code.language-java").forEach((el) => hljs.highlightElement(el));
+    });
+</script>
+<link rel="apple-touch-icon" sizes="180x180" href="/training-material-hcl-connections/theme/atvantage/assets/icon-180.png">
+<link rel="icon" href="/training-material-hcl-connections/theme/atvantage/assets/logo-orange.svg">
+<link rel="icon" sizes="16x16" href="/training-material-hcl-connections/theme/atvantage/assets/icon-16.png">
+
+  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1788958243">
+  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1788958243"></head><body class="avd-academy-guide">
+  <a class="avd-academy-skip-link" href="#avd-academy-content">Zum Inhalt springen</a><div class="avd-academy-metanav">
+    <span>ATVANTAGE Academy</span>
+  </div>
+
+  <header class="avd-academy-header">
+  <a class="avd-academy-header__brand" href="/training-material-hcl-connections/" aria-label="Startseite">
+    <img class="avd-academy-header__logo"
+         src="/training-material-hcl-connections/assets/logo-schulung.svg"
+         alt="ATVANTAGE Academy">
+  </a>
+  <button class="avd-academy-btn avd-academy-btn--ghost avd-academy-header__burger" data-avd-academy-nav-toggle="#avd-academy-main-nav"
+          aria-label="Navigation umschalten" aria-expanded="false">☰</button>
+  <nav class="avd-academy-header__nav" id="avd-academy-main-nav"><a href="/training-material-hcl-connections/">Start</a><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
+  </nav><div class="avd-academy-header__tools"><button type="button" class="avd-academy-qr" data-avd-academy-qr hidden
+                title="Diese Seite auf Deinem Smartphone öffnen"
+                aria-label="Diese Seite auf Deinem Smartphone öffnen"></button><button type="button" class="avd-academy-tool avd-academy-tool--theme avd-academy-theme-toggle" data-avd-academy-theme-toggle
+              title="Farbschema umschalten (hell/dunkel)"
+              aria-label="Farbschema umschalten">◐</button></div>
+</header>
+
+  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><span>/</span><span aria-current="page">Eine Community umhängen und aufräumen</span></nav><div class="avd-academy-guide-hero__meta">
+      <div class="avd-academy-guide-hero__tags"><span class="avd-academy-tag avd-academy-tag--time">ca. 15 Minuten</span><span class="avd-academy-tag">Communities</span><span class="avd-academy-tag">Content Management</span>
+      </div>
+      <div class="avd-academy-guide-hero__actions">
+        <button type="button" class="avd-academy-btn avd-academy-btn--ghost avd-academy-copy-md"
+                data-avd-academy-copy-md="#avd-academy-md-source"
+                title="Markdown kopieren" aria-label="Markdown kopieren"></button>
+      </div>
+    </div><h1>Eine Community umhängen und aufräumen</h1>
+  </section><div class="avd-academy-guide-layout">
+    <main class="avd-academy-guide-main avd-academy-guide-main--numbered" id="avd-academy-content">
+      <h1 id="eine-community-umhängen-und-aufräumen">Eine Community umhängen und aufräumen</h1>
+
+<p><strong>Als</strong> Person, die Communities administriert, <strong>möchte ich</strong> Struktur,
+Mitgliedschaft und Sichtbarkeit ändern können, <strong>damit</strong> eine gewachsene Landschaft
+wieder zu der Organisation passt, die sie abbilden soll.</p>
+
+<h2 id="lernziele">Lernziele</h2>
+
+<p>Du…</p>
+
+<ul>
+  <li>ordnest eine Community in der Hierarchie neu ein.</li>
+  <li>prüfst die Mitgliedschaft einer Community, auch die über Gruppen vermittelte.</li>
+  <li>änderst die Sichtbarkeit und benennst vorher, was davon alles erfasst wird.</li>
+  <li>entscheidest bei Dateien inaktiver Personen zwischen Löschen und Übergeben.</li>
+</ul>
+
+<h2 id="definition-of-done">Definition of Done</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Die Community hängt an ihrem neuen Platz in der Hierarchie.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die vollständige Mitgliederliste – einschließlich der über Gruppen
+    vermittelten Mitglieder.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast vor einem Sichtbarkeitswechsel aufgeschrieben, was er alles erfasst.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Für die Dateien der inaktiven Person steht je Datei eine Entscheidung mit
+    Begründung.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die Reflexionsfragen schriftlich beantwortet.</li>
+</ul>
+
+<h2 id="arbeitsschritte">Arbeitsschritte</h2>
+
+<blockquote>
+  <p><strong>Nur an Wegwerf-Communities.</strong> Eine Sichtbarkeitsänderung wirkt auf den
+gesamten Unterbau und ist über CAT nicht zurücknehmbar.</p>
+</blockquote>
+
+<h3 id="die-lage-aufnehmen">Die Lage aufnehmen</h3>
+
+<p>Sieh Dir die Community an: Wo hängt sie, was hängt an ihr, wer ist Eigentümer, wie
+viele Dateien liegen darin?</p>
+
+<h3 id="die-mitglieder-wirklich-kennen">Die Mitglieder wirklich kennen</h3>
+
+<p>Lass Dir die Mitglieder auflisten – und dann die Mitglieder der beteiligten
+Gruppen.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Die Zahl in der Übersicht und die Zahl der Menschen, die Zugriff
+haben, sind selten dieselbe.</p>
+</blockquote>
+
+<h3 id="umhängen">Umhängen</h3>
+
+<p>Ordne die Community neu ein – mach sie zur untergeordneten Community einer
+anderen, oder löse sie heraus. Beobachte, was mit den untergeordneten Communities
+geschieht.</p>
+
+<h3 id="die-sichtbarkeit-durchdenken">Die Sichtbarkeit durchdenken</h3>
+
+<p>Schreib auf, was ein Wechsel von intern zu extern alles erfassen würde. Führ ihn
+nur aus, wenn Dein Testaufbau das hergibt.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Prüfe vorher, auf welchem Weg Du diesen Schritt zurücknehmen
+müsstest. Er führt nicht über dasselbe Werkzeug.</p>
+</blockquote>
+
+<h3 id="die-dateien-der-inaktiven-person-sichten">Die Dateien der inaktiven Person sichten</h3>
+
+<p>Sieh Dir die Dateien an, deren Eigentümer inaktiv ist. Trenne sie in privat und
+geteilt.</p>
+
+<h3 id="entscheiden-und-ausführen">Entscheiden und ausführen</h3>
+
+<p>Lösche die privaten, nicht geteilten Dateien und gib mindestens eine geteilte
+Datei an einen neuen Eigentümer weiter.</p>
+
+<h3 id="platz-zurückholen">Platz zurückholen</h3>
+
+<p>Sieh Dir den Papierkorb an und sortiere ihn so, dass die ältesten Einträge oben
+stehen. Notiere, wie viel Du hier freigeben könntest.</p>
+
+<h3 id="den-umweg-ausprobieren">Den Umweg ausprobieren</h3>
+
+<p>Finde heraus, wie Du eine Datei aus einer Community in eine andere bekommst.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Es gibt keinen direkten Weg. Etwas anderes lässt sich aber kopieren
+und nimmt die Datei mit.</p>
+</blockquote>
+
+<h2 id="reflexionsfragen">Reflexionsfragen</h2>
+
+<ul>
+  <li>Du machst eine interne Community extern. Was hast Du vorher geprüft, und warum
+ist der Rückweg wichtig zu kennen?</li>
+  <li>Eine Person ist inaktiv und hat Dateien. Wann löschst Du, wann übergibst Du?
+Nenne Dein Kriterium.</li>
+  <li>Eine Datei soll von einer Community in eine andere. Welchen Weg nimmst Du?</li>
+</ul>
+
+
+<textarea id="avd-academy-md-source" hidden aria-hidden="true"># Eine Community umhängen und aufräumen
+
+**Als** Person, die Communities administriert, **möchte ich** Struktur,
+Mitgliedschaft und Sichtbarkeit ändern können, **damit** eine gewachsene Landschaft
+wieder zu der Organisation passt, die sie abbilden soll.
+
+## Lernziele
+
+Du…
+
+- ordnest eine Community in der Hierarchie neu ein.
+- prüfst die Mitgliedschaft einer Community, auch die über Gruppen vermittelte.
+- änderst die Sichtbarkeit und benennst vorher, was davon alles erfasst wird.
+- entscheidest bei Dateien inaktiver Personen zwischen Löschen und Übergeben.
+
+## Definition of Done
+
+* [ ] Die Community hängt an ihrem neuen Platz in der Hierarchie.
+* [ ] Du hast die vollständige Mitgliederliste – einschließlich der über Gruppen
+      vermittelten Mitglieder.
+* [ ] Du hast vor einem Sichtbarkeitswechsel aufgeschrieben, was er alles erfasst.
+* [ ] Für die Dateien der inaktiven Person steht je Datei eine Entscheidung mit
+      Begründung.
+* [ ] Du hast die Reflexionsfragen schriftlich beantwortet.
+
+## Arbeitsschritte
+
+&gt; **Nur an Wegwerf-Communities.** Eine Sichtbarkeitsänderung wirkt auf den
+&gt; gesamten Unterbau und ist über CAT nicht zurücknehmbar.
+
+### Die Lage aufnehmen
+
+Sieh Dir die Community an: Wo hängt sie, was hängt an ihr, wer ist Eigentümer, wie
+viele Dateien liegen darin?
+
+### Die Mitglieder wirklich kennen
+
+Lass Dir die Mitglieder auflisten – und dann die Mitglieder der beteiligten
+Gruppen.
+
+&gt; **Hinweis:** Die Zahl in der Übersicht und die Zahl der Menschen, die Zugriff
+&gt; haben, sind selten dieselbe.
+
+### Umhängen
+
+Ordne die Community neu ein – mach sie zur untergeordneten Community einer
+anderen, oder löse sie heraus. Beobachte, was mit den untergeordneten Communities
+geschieht.
+
+### Die Sichtbarkeit durchdenken
+
+Schreib auf, was ein Wechsel von intern zu extern alles erfassen würde. Führ ihn
+nur aus, wenn Dein Testaufbau das hergibt.
+
+&gt; **Hinweis:** Prüfe vorher, auf welchem Weg Du diesen Schritt zurücknehmen
+&gt; müsstest. Er führt nicht über dasselbe Werkzeug.
+
+### Die Dateien der inaktiven Person sichten
+
+Sieh Dir die Dateien an, deren Eigentümer inaktiv ist. Trenne sie in privat und
+geteilt.
+
+### Entscheiden und ausführen
+
+Lösche die privaten, nicht geteilten Dateien und gib mindestens eine geteilte
+Datei an einen neuen Eigentümer weiter.
+
+### Platz zurückholen
+
+Sieh Dir den Papierkorb an und sortiere ihn so, dass die ältesten Einträge oben
+stehen. Notiere, wie viel Du hier freigeben könntest.
+
+### Den Umweg ausprobieren
+
+Finde heraus, wie Du eine Datei aus einer Community in eine andere bekommst.
+
+&gt; **Hinweis:** Es gibt keinen direkten Weg. Etwas anderes lässt sich aber kopieren
+&gt; und nimmt die Datei mit.
+
+## Reflexionsfragen
+
+- Du machst eine interne Community extern. Was hast Du vorher geprüft, und warum
+  ist der Rückweg wichtig zu kennen?
+- Eine Person ist inaktiv und hat Dateien. Wann löschst Du, wann übergibst Du?
+  Nenne Dein Kriterium.
+- Eine Datei soll von einer Community in eine andere. Welchen Weg nimmst Du?</textarea>
+    </main><aside class="avd-academy-guide-sidebar"><details class="avd-academy-guide-side avd-academy-guide-side--toc avd-academy-fold" data-avd-academy-toc-box
+               data-avd-academy-toc-grenze="12" open hidden>
+        <summary class="avd-academy-guide-side__label">Auf dieser Seite</summary>
+        <nav class="avd-academy-toc avd-academy-fold__body" data-avd-academy-toc aria-label="Inhaltsverzeichnis"></nav>
+      </details>
+      <div class="avd-academy-guide-side avd-academy-guide-side--bordered" data-avd-academy-progress hidden><div class="avd-academy-guide-side__label">Fortschritt</div>
+        <div class="avd-academy-progress__bar"><div class="avd-academy-progress__fill"></div></div>
+        <div class="avd-academy-progress__text"></div>
+      </div>
+    </aside>
+  </div><div class="avd-academy-print-contact" aria-hidden="true">
+    <span>Kontakt: https://academy.atvantage-academy.workers.dev/</span>
+    <span>academy@atvantage.com</span>
+  </div>
+
+  <footer class="avd-academy-footer">
+  <div class="avd-academy-footer__grid">
+    <div>
+      <strong>HCL Connections (Academy)</strong>
+      <p>Schulungsunterlagen der ATVANTAGE Academy.</p>
+    </div><div>
+      <strong>Kontakt</strong>
+      <p><a href="https://academy.atvantage-academy.workers.dev/" target="_blank" rel="noopener">Website</a><br><a href="mailto:academy@atvantage.com">academy@atvantage.com</a><br>
+      </p>
+    </div></div>
+  <div class="avd-academy-footer__legal">
+    © <span data-avd-academy-year>2026</span> ATVANTAGE
+  </div>
+</footer>
+
+</body>
+</html>

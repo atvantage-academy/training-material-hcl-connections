@@ -59,8 +59,8 @@
 --><html lang="de">
 <head>
   <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title> · HCL Connections (Academy)</title>
-<meta name="description" content="Schulungskonzepte der ATVANTAGE Academy."><link rel="preconnect" href="https://fonts.googleapis.com">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Den Weg eines Aufrufs zeichnen · HCL Connections (Academy)</title>
+<meta name="description" content="Von der Browseradresse bis zur Anwendung – und was auf dem Rückweg noch passiert."><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1788958243">
 <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1788958243">
@@ -96,7 +96,7 @@
   </a>
   <button class="avd-academy-btn avd-academy-btn--ghost avd-academy-header__burger" data-avd-academy-nav-toggle="#avd-academy-main-nav"
           aria-label="Navigation umschalten" aria-expanded="false">☰</button>
-  <nav class="avd-academy-header__nav" id="avd-academy-main-nav"><a href="/training-material-hcl-connections/" aria-current="page">Start</a><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
+  <nav class="avd-academy-header__nav" id="avd-academy-main-nav"><a href="/training-material-hcl-connections/">Start</a><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
   </nav><div class="avd-academy-header__tools"><button type="button" class="avd-academy-qr" data-avd-academy-qr hidden
                 title="Diese Seite auf Deinem Smartphone öffnen"
                 aria-label="Diese Seite auf Deinem Smartphone öffnen"></button><button type="button" class="avd-academy-tool avd-academy-tool--theme avd-academy-theme-toggle" data-avd-academy-theme-toggle
@@ -104,48 +104,183 @@
               aria-label="Farbschema umschalten">◐</button></div>
 </header>
 
-  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/">Home</a></nav><div class="avd-academy-guide-hero__meta">
-      <div class="avd-academy-guide-hero__tags">
+  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><span>/</span><span aria-current="page">Den Weg eines Aufrufs zeichnen</span></nav><div class="avd-academy-guide-hero__meta">
+      <div class="avd-academy-guide-hero__tags"><span class="avd-academy-tag avd-academy-tag--time">ca. 10 Minuten</span><span class="avd-academy-tag">Connections-Architektur</span><span class="avd-academy-tag">Fehlereinordnung</span>
       </div>
       <div class="avd-academy-guide-hero__actions">
+        <button type="button" class="avd-academy-btn avd-academy-btn--ghost avd-academy-copy-md"
+                data-avd-academy-copy-md="#avd-academy-md-source"
+                title="Markdown kopieren" aria-label="Markdown kopieren"></button>
       </div>
-    </div><h1></h1>
+    </div><h1>Den Weg eines Aufrufs zeichnen</h1>
   </section><div class="avd-academy-guide-layout">
-    <main class="avd-academy-guide-main" id="avd-academy-content">
-      <h1 id="hcl-connections">HCL Connections</h1>
+    <main class="avd-academy-guide-main avd-academy-guide-main--numbered" id="avd-academy-content">
+      <h1 id="den-weg-eines-aufrufs-zeichnen">Den Weg eines Aufrufs zeichnen</h1>
 
-<p>Willkommen bei den Schulungsunterlagen rund um <strong>HCL Connections</strong>. Wähle Deinen
-Kurs – darin findest Du die Übungen in der Reihenfolge, in der wir sie durchgehen.</p>
+<p><strong>Als</strong> Person im 1st oder 2nd Level <strong>möchte ich</strong> wissen, welche Stationen ein
+Seitenaufruf durchläuft, <strong>damit</strong> ich eine Störung verorten kann, statt sie nur
+weiterzureichen.</p>
 
-<div class="avd-academy-grid">
+<h2 id="lernziele">Lernziele</h2>
 
-  <div class="avd-academy-card">
+<p>Du…</p>
 
-    <h3 id="connections-administration-toolkit-cat"><a href="cat-administration/">Connections Administration Toolkit (CAT)</a></h3>
+<ul>
+  <li>zeichnest den Weg eines Connections-Aufrufs vom Browser bis zur Anwendung.</li>
+  <li>ordnest ein Fehlerbild einer Station auf diesem Weg zu.</li>
+  <li>benennst die Bestandteile Deiner Umgebung, die CAT nicht erreicht.</li>
+</ul>
 
-    <p>Connections administrieren, ohne XML-Dateien zu editieren: Userprobleme lösen,
-Inhalte übergeben, Communities und Wikis zusammenführen.</p>
+<h2 id="definition-of-done">Definition of Done</h2>
 
-  </div>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast eine Skizze mit mindestens drei Stationen zwischen Browser und
+    Anwendung.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />In der Skizze ist markiert, an welcher Stelle sich eine Antwort noch
+    verändern kann, nachdem die Anwendung sie erzeugt hat.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast zwei Fehlerbilder je einer Station zugeordnet.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die Reflexionsfragen schriftlich beantwortet.</li>
+</ul>
 
-  <div class="avd-academy-card">
+<h2 id="arbeitsschritte">Arbeitsschritte</h2>
 
-    <h3 id="connections-engagement-center-hcec"><a href="engagement-center/">Connections Engagement Center (HCEC)</a></h3>
+<blockquote>
+  <p><strong>Diese Übung braucht keinen Systemzugang.</strong> Gezeichnet wird auf Papier oder auf
+einer geteilten Fläche.</p>
+</blockquote>
 
-    <p>Das Intranet auf Connections-Basis betreuen: eine Seite lesen wie einen Bauplan –
-Inhaltsquellen, Rechte und die häufigsten Beschwerden.</p>
+<h3 id="die-stationen-sammeln">Die Stationen sammeln</h3>
 
-  </div>
+<p>Schreib die Stationen auf, die zwischen einem Browser und einer
+Connections-Anwendung liegen. Arbeitet zu zweit: Eine Person zeichnet, die andere
+fragt bei jedem Pfeil nach, was dort geschieht.</p>
 
-</div>
+<h3 id="den-pfad-entscheiden-lassen">Den Pfad entscheiden lassen</h3>
+
+<p>Zeichne ein, wodurch entschieden wird, welche Anwendung eine Anfrage beantwortet.
+Nimm zwei unterschiedliche Adressen als Beispiel.</p>
+
+<h3 id="den-rückweg-einzeichnen">Den Rückweg einzeichnen</h3>
+
+<p>Ergänze, was mit der Antwort geschieht, bevor sie im Browser ankommt. Markiere die
+Stelle, an der sich eine Seite noch verändern kann, ohne dass die Anwendung etwas
+davon weiß.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Diese Stelle erklärt, warum dieselbe Seite bei zwei Personen
+unterschiedlich aussehen kann.</p>
+</blockquote>
+
+<h3 id="zwei-fehlerbilder-verorten">Zwei Fehlerbilder verorten</h3>
+
+<p>Ordne diese beiden Meldungen je einer Station zu und begründe kurz:</p>
+
+<ul>
+  <li>„Ich komme gar nicht auf Connections.“</li>
+  <li>„Die Seite baut sich auf, aber der mittlere Bereich bleibt leer.“</li>
+</ul>
+
+<h3 id="die-grenze-von-cat-markieren">Die Grenze von CAT markieren</h3>
+
+<p>Markiere in Deiner Skizze, welche Teile mit CAT nicht administrierbar sind.</p>
+
+<h2 id="reflexionsfragen">Reflexionsfragen</h2>
+
+<ul>
+  <li>Eine Connections-Seite lädt gar nicht, eine andere lädt halb. Wo würdest Du
+jeweils zuerst suchen?</li>
+  <li>Warum kann eine Seite bei zwei Personen unterschiedlich aussehen, ohne dass
+jemand die Anwendung geändert hat?</li>
+  <li>Welche Teile Deiner eigenen Umgebung kannst Du mit CAT nicht anfassen? Woher
+bekommst Du diese Information?</li>
+</ul>
 
 
+<textarea id="avd-academy-md-source" hidden aria-hidden="true"># Den Weg eines Aufrufs zeichnen
 
+**Als** Person im 1st oder 2nd Level **möchte ich** wissen, welche Stationen ein
+Seitenaufruf durchläuft, **damit** ich eine Störung verorten kann, statt sie nur
+weiterzureichen.
+
+## Lernziele
+
+Du…
+
+- zeichnest den Weg eines Connections-Aufrufs vom Browser bis zur Anwendung.
+- ordnest ein Fehlerbild einer Station auf diesem Weg zu.
+- benennst die Bestandteile Deiner Umgebung, die CAT nicht erreicht.
+
+## Definition of Done
+
+* [ ] Du hast eine Skizze mit mindestens drei Stationen zwischen Browser und
+      Anwendung.
+* [ ] In der Skizze ist markiert, an welcher Stelle sich eine Antwort noch
+      verändern kann, nachdem die Anwendung sie erzeugt hat.
+* [ ] Du hast zwei Fehlerbilder je einer Station zugeordnet.
+* [ ] Du hast die Reflexionsfragen schriftlich beantwortet.
+
+## Arbeitsschritte
+
+&gt; **Diese Übung braucht keinen Systemzugang.** Gezeichnet wird auf Papier oder auf
+&gt; einer geteilten Fläche.
+
+### Die Stationen sammeln
+
+Schreib die Stationen auf, die zwischen einem Browser und einer
+Connections-Anwendung liegen. Arbeitet zu zweit: Eine Person zeichnet, die andere
+fragt bei jedem Pfeil nach, was dort geschieht.
+
+### Den Pfad entscheiden lassen
+
+Zeichne ein, wodurch entschieden wird, welche Anwendung eine Anfrage beantwortet.
+Nimm zwei unterschiedliche Adressen als Beispiel.
+
+### Den Rückweg einzeichnen
+
+Ergänze, was mit der Antwort geschieht, bevor sie im Browser ankommt. Markiere die
+Stelle, an der sich eine Seite noch verändern kann, ohne dass die Anwendung etwas
+davon weiß.
+
+&gt; **Hinweis:** Diese Stelle erklärt, warum dieselbe Seite bei zwei Personen
+&gt; unterschiedlich aussehen kann.
+
+### Zwei Fehlerbilder verorten
+
+Ordne diese beiden Meldungen je einer Station zu und begründe kurz:
+
+- „Ich komme gar nicht auf Connections.“
+- „Die Seite baut sich auf, aber der mittlere Bereich bleibt leer.“
+
+### Die Grenze von CAT markieren
+
+Markiere in Deiner Skizze, welche Teile mit CAT nicht administrierbar sind.
+
+## Reflexionsfragen
+
+- Eine Connections-Seite lädt gar nicht, eine andere lädt halb. Wo würdest Du
+  jeweils zuerst suchen?
+- Warum kann eine Seite bei zwei Personen unterschiedlich aussehen, ohne dass
+  jemand die Anwendung geändert hat?
+- Welche Teile Deiner eigenen Umgebung kannst Du mit CAT nicht anfassen? Woher
+  bekommst Du diese Information?
+
+## Weiterführende Informationen
+
+- [HCL Connections – Produktdokumentation](https://opensource.hcltechsw.com/connections-doc/v8/)
+</textarea>
     </main><aside class="avd-academy-guide-sidebar"><details class="avd-academy-guide-side avd-academy-guide-side--toc avd-academy-fold" data-avd-academy-toc-box
                data-avd-academy-toc-grenze="12" open hidden>
         <summary class="avd-academy-guide-side__label">Auf dieser Seite</summary>
         <nav class="avd-academy-toc avd-academy-fold__body" data-avd-academy-toc aria-label="Inhaltsverzeichnis"></nav>
       </details>
+      <div class="avd-academy-guide-side avd-academy-guide-side--bordered" data-avd-academy-progress hidden><div class="avd-academy-guide-side__label">Fortschritt</div>
+        <div class="avd-academy-progress__bar"><div class="avd-academy-progress__fill"></div></div>
+        <div class="avd-academy-progress__text"></div>
+      </div>
+      <div class="avd-academy-guide-side avd-academy-guide-side--bordered">
+        <div class="avd-academy-guide-side__label">Weiterführende Informationen</div>
+        <div class="avd-academy-guide-side__links"><a href="https://opensource.hcltechsw.com/connections-doc/v8/" target="_blank" rel="noopener"><span>HCL Connections – Produktdokumentation</span></a>
+        </div></div>
     </aside>
   </div><div class="avd-academy-print-contact" aria-hidden="true">
     <span>Kontakt: https://academy.atvantage-academy.workers.dev/</span>

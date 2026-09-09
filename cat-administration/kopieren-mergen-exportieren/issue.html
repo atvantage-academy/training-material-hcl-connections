@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--
+  ATVANTAGE-Academy – EINZIGES Seitenlayout (Jekyll)
+  --------------------------------------------------
+  Ein Layout für alles: allgemeine Doku-Seiten UND Guides (Übungen/Anleitungen).
+  Optik nach der ATVANTAGE-Website: Meta-Nav, weiße sticky Kopfzeile, Hero-Band,
+  zweispaltig mit rechter Sidebar (automatisches Inhaltsverzeichnis, Fortschritt
+  aus Task-Listen, weiterführende Ressourcen). Überschriften ohne Emoji-Icons.
+
+  Verwendung im Front Matter:  layout: default   (oder `layout: guide` – Alias,
+  siehe guide.html; beides rendert dieselbe Guide-Ansicht)
+
+  `layout: visualization` (siehe visualization.html) rendert dieselbe Seite OHNE
+  obere Navigation (Meta-Leiste + Kopfzeile/TopNav), OHNE Brotkrumen und OHNE den
+  rechten Bereich (Inhaltsverzeichnis, Fortschritt, Ressourcen – auch bei gesetztem
+  `resources`), mit schmalerem Hero-Balken und breiterem, zentriertem Inhalt – für
+  eigenständige Visualisierungen/Simulationen.
+
+  Alle Front-Matter-Felder sind OPTIONAL (Convention over Configuration). Nur der
+  Titel ist faktisch erforderlich – als `title:` ODER als erste `#`-Überschrift:
+
+    title:       "…"                → sonst erste #-Überschrift (eins von beiden nötig)
+    description: "…"                → Meta-Description
+    duration:    8                  → Zahl in Minuten → Hero-Tag „ca. 8 Minuten“
+                                       (ungefähre LESEDAUER; bei Guides/Übungen die
+                                       Dauer der Übung, bei Visualisierungen die
+                                       Bearbeitungszeit – dort unüblich, aber erlaubt).
+    topics:      ["Cloud & DevOps"] → weitere Hero-Tags
+    resources:   [{title, url, icon}, …] → Sidebar-Karte „Weiterführende Informationen“.
+                                       title und/oder icon (Bildpfad); icon erscheint
+                                       rechts und wird kreisrund dargestellt.
+    breadcrumb:                     → Brotkrumen anpassen (beides optional):
+      label: "…"                    → überschreibt den Ordnernamen dieser Ebene;
+                                       in der Ordner-`index.md` gesetzt gilt es für
+                                       ALLE Seiten im Ordner und in Unterordnern.
+      ancestors: [{title, url}, …]  → explizite Vorfahren-Kette OHNE die aktuelle
+                                       Seite (diese wird automatisch angehängt); in
+                                       der `index.md` gesetzt wird sie vererbt.
+
+  „Markdown kopieren“ (Button im Hero) erscheint NUR auf Guides – dort ist das
+  Übernehmen des Quelltexts der Zweck. Bedingungen: Markdown-Seite (`.md`, nicht
+  reines HTML) UND der Schalter `toolbar.copy` (Vorgabe: nur `layout: guide`, siehe
+  `_includes/avd-switch.html`). Doku-Seiten und Visualisierungen haben ihn nicht –
+  bei letzteren, weil ihr Inhalt nicht sinnvoll als Markdown kopierbar ist.
+
+  DIE SEITENWERKZEUGE – QR-Code, Farbschema-Umschalter, Drucken – sind EINE
+  Komponente (`_includes/tools.html`) an zwei Standorten in diesem Rahmen:
+
+    Kopfzeile   `chrome: true`  (page, guide)      QR + Farbschema
+    Hero rechts `hero_tools`    (visualization)    QR + Farbschema + Drucken
+
+  Die Regel dahinter ist die Kopfzeile: Wo es sie gibt, tragen die Werkzeuge sie;
+  wo nicht, tritt der Hero an ihre Stelle. Drucken gibt es nur dort, weil auf einer
+  gewöhnlichen Seite der Browser-Befehl (Strg/Cmd+P) genügt, die rahmenlose
+  Ansicht aber keinen anderen Weg aufs Papier hat.
+
+  Der QR-Code wird erst im Browser erzeugt (theme/academy/atvantage.js), weil die
+  Adresse zur Build-Zeit nicht feststeht; ohne JavaScript erscheint er nicht.
+--><html lang="de">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Zwei Wikis zusammenführen · HCL Connections (Academy)</title>
+<meta name="description" content="Vorhersagen, was bei einer Zusammenführung verloren geht – dann ausführen und vergleichen."><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1788958243">
+<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1788958243" defer></script>
+<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1788958243" defer></script>
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1788958243">
+<script type="module">
+  const _hlbase = "/training-material-hcl-connections/theme/academy/hljs/";
+  Promise.all([import(_hlbase + "core.min.js"), import(_hlbase + "java.min.js")])
+    .then(([core, java]) => {
+      const hljs = core.default;
+      hljs.registerLanguage("java", java.default);
+      document.querySelectorAll("pre code.language-java").forEach((el) => hljs.highlightElement(el));
+    });
+</script>
+<link rel="apple-touch-icon" sizes="180x180" href="/training-material-hcl-connections/theme/atvantage/assets/icon-180.png">
+<link rel="icon" href="/training-material-hcl-connections/theme/atvantage/assets/logo-orange.svg">
+<link rel="icon" sizes="16x16" href="/training-material-hcl-connections/theme/atvantage/assets/icon-16.png">
+
+  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1788958243">
+  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1788958243"></head><body class="avd-academy-guide">
+  <a class="avd-academy-skip-link" href="#avd-academy-content">Zum Inhalt springen</a><div class="avd-academy-metanav">
+    <span>ATVANTAGE Academy</span>
+  </div>
+
+  <header class="avd-academy-header">
+  <a class="avd-academy-header__brand" href="/training-material-hcl-connections/" aria-label="Startseite">
+    <img class="avd-academy-header__logo"
+         src="/training-material-hcl-connections/assets/logo-schulung.svg"
+         alt="ATVANTAGE Academy">
+  </a>
+  <button class="avd-academy-btn avd-academy-btn--ghost avd-academy-header__burger" data-avd-academy-nav-toggle="#avd-academy-main-nav"
+          aria-label="Navigation umschalten" aria-expanded="false">☰</button>
+  <nav class="avd-academy-header__nav" id="avd-academy-main-nav"><a href="/training-material-hcl-connections/">Start</a><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
+  </nav><div class="avd-academy-header__tools"><button type="button" class="avd-academy-qr" data-avd-academy-qr hidden
+                title="Diese Seite auf Deinem Smartphone öffnen"
+                aria-label="Diese Seite auf Deinem Smartphone öffnen"></button><button type="button" class="avd-academy-tool avd-academy-tool--theme avd-academy-theme-toggle" data-avd-academy-theme-toggle
+              title="Farbschema umschalten (hell/dunkel)"
+              aria-label="Farbschema umschalten">◐</button></div>
+</header>
+
+  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><span>/</span><span aria-current="page">Zwei Wikis zusammenführen</span></nav><div class="avd-academy-guide-hero__meta">
+      <div class="avd-academy-guide-hero__tags"><span class="avd-academy-tag avd-academy-tag--time">ca. 15 Minuten</span><span class="avd-academy-tag">Content Management</span><span class="avd-academy-tag">Kopieren und Zusammenführen</span>
+      </div>
+      <div class="avd-academy-guide-hero__actions">
+        <button type="button" class="avd-academy-btn avd-academy-btn--ghost avd-academy-copy-md"
+                data-avd-academy-copy-md="#avd-academy-md-source"
+                title="Markdown kopieren" aria-label="Markdown kopieren"></button>
+      </div>
+    </div><h1>Zwei Wikis zusammenführen</h1>
+  </section><div class="avd-academy-guide-layout">
+    <main class="avd-academy-guide-main avd-academy-guide-main--numbered" id="avd-academy-content">
+      <h1 id="zwei-wikis-zusammenführen">Zwei Wikis zusammenführen</h1>
+
+<p><strong>Als</strong> Person, die zwei gewachsene Inhaltsbestände zusammenlegen soll, <strong>möchte
+ich</strong> vorher wissen, was dabei erhalten bleibt, <strong>damit</strong> ich der Fachabteilung
+eine belastbare Zusage geben kann.</p>
+
+<h2 id="lernziele">Lernziele</h2>
+
+<p>Du…</p>
+
+<ul>
+  <li>sagst vor der Ausführung vorher, was bei einer Zusammenführung verloren geht.</li>
+  <li>wählst mit der Zielhierarchie gezielt aus, welche Teile übernommen werden.</li>
+  <li>führst zwei Wikis zusammen und vergleichst das Ergebnis mit Deiner Vorhersage.</li>
+  <li>formulierst eine Ankündigung an den Fachbereich, die die Verluste benennt.</li>
+</ul>
+
+<h2 id="definition-of-done">Definition of Done</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast <strong>vor</strong> der Ausführung aufgeschrieben, was Deiner Erwartung nach
+    nicht mitkommt.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast in der Zielhierarchie mindestens einen Teil bewusst <strong>abgewählt</strong>.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Die Zusammenführung ist ausgeführt – oder Du hast die Auswahl vollständig
+    angesagt.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast Vorhersage und Ergebnis verglichen und die Abweichungen notiert.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast eine Ankündigung an den Fachbereich in fünf Zeilen formuliert.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die Reflexionsfragen schriftlich beantwortet.</li>
+</ul>
+
+<h2 id="arbeitsschritte">Arbeitsschritte</h2>
+
+<blockquote>
+  <p><strong>Nur an Wegwerf-Objekten.</strong> Die Übung läuft an zwei eigens dafür angelegten
+Wikis. Der Ursprung wird bei einer Zusammenführung zwar nicht verändert – aber
+das Ziel schon.</p>
+</blockquote>
+
+<h3 id="die-beiden-bestände-ansehen">Die beiden Bestände ansehen</h3>
+
+<p>Verschaff Dir einen Überblick über Quelle und Ziel: Wie viele Seiten, welche
+Unterseiten, welche Anhänge, wer hat wann was geändert?</p>
+
+<h3 id="die-vorhersage-aufschreiben">Die Vorhersage aufschreiben</h3>
+
+<p>Schreib <strong>jetzt</strong>, vor jedem weiteren Schritt, auf: Was wird nach der
+Zusammenführung im Ziel anders sein als in der Quelle? Denk an Urheberschaft,
+Datumsangaben, Bewertungen und Anhänge.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Diese Liste darf nicht nachträglich geändert werden. Sie ist der
+Vergleichsmaßstab, nicht die Lösung.</p>
+</blockquote>
+
+<h3 id="die-auswahl-treffen">Die Auswahl treffen</h3>
+
+<p>Öffne die Zusammenführung und sieh Dir die Zielhierarchie an. Wähl eine Unterseite
+bewusst ab und achte darauf, wie sich die Anzeige der übergeordneten Einträge
+verändert.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Die Kästchen haben mehr als zwei Zustände. Finde heraus, was jeder
+bedeutet, bevor Du fortfährst.</p>
+</blockquote>
+
+<h3 id="ausführen">Ausführen</h3>
+
+<p>Führe die Zusammenführung aus. Schreib in den Bestätigungsdialog, warum Du sie
+durchführst.</p>
+
+<h3 id="vergleichen">Vergleichen</h3>
+
+<p>Geh Deine Vorhersage Punkt für Punkt durch und prüfe sie am Ergebnis. Notiere die
+Abweichungen – gerade die, bei denen Du zu optimistisch warst.</p>
+
+<h3 id="den-ursprung-prüfen">Den Ursprung prüfen</h3>
+
+<p>Sieh Dir die Quelle noch einmal an und stell fest, ob sich dort etwas verändert
+hat.</p>
+
+<h3 id="die-ankündigung-schreiben">Die Ankündigung schreiben</h3>
+
+<p>Formuliere in fünf Zeilen, was Du dem Fachbereich vor einer solchen
+Zusammenführung sagen würdest.</p>
+
+<h2 id="reflexionsfragen">Reflexionsfragen</h2>
+
+<ul>
+  <li>Was hast Du vorhergesagt, und was ist tatsächlich verloren gegangen? Wo lagst Du
+daneben?</li>
+  <li>Wie hättest Du diese Zusammenführung dem Fachbereich vorher angekündigt?</li>
+  <li>Ihr wollt eine wichtige Community regelmäßig automatisch sichern lassen. Was
+tut Ihr vorher – und warum?</li>
+</ul>
+
+
+<textarea id="avd-academy-md-source" hidden aria-hidden="true"># Zwei Wikis zusammenführen
+
+**Als** Person, die zwei gewachsene Inhaltsbestände zusammenlegen soll, **möchte
+ich** vorher wissen, was dabei erhalten bleibt, **damit** ich der Fachabteilung
+eine belastbare Zusage geben kann.
+
+## Lernziele
+
+Du…
+
+- sagst vor der Ausführung vorher, was bei einer Zusammenführung verloren geht.
+- wählst mit der Zielhierarchie gezielt aus, welche Teile übernommen werden.
+- führst zwei Wikis zusammen und vergleichst das Ergebnis mit Deiner Vorhersage.
+- formulierst eine Ankündigung an den Fachbereich, die die Verluste benennt.
+
+## Definition of Done
+
+* [ ] Du hast **vor** der Ausführung aufgeschrieben, was Deiner Erwartung nach
+      nicht mitkommt.
+* [ ] Du hast in der Zielhierarchie mindestens einen Teil bewusst **abgewählt**.
+* [ ] Die Zusammenführung ist ausgeführt – oder Du hast die Auswahl vollständig
+      angesagt.
+* [ ] Du hast Vorhersage und Ergebnis verglichen und die Abweichungen notiert.
+* [ ] Du hast eine Ankündigung an den Fachbereich in fünf Zeilen formuliert.
+* [ ] Du hast die Reflexionsfragen schriftlich beantwortet.
+
+## Arbeitsschritte
+
+&gt; **Nur an Wegwerf-Objekten.** Die Übung läuft an zwei eigens dafür angelegten
+&gt; Wikis. Der Ursprung wird bei einer Zusammenführung zwar nicht verändert – aber
+&gt; das Ziel schon.
+
+### Die beiden Bestände ansehen
+
+Verschaff Dir einen Überblick über Quelle und Ziel: Wie viele Seiten, welche
+Unterseiten, welche Anhänge, wer hat wann was geändert?
+
+### Die Vorhersage aufschreiben
+
+Schreib **jetzt**, vor jedem weiteren Schritt, auf: Was wird nach der
+Zusammenführung im Ziel anders sein als in der Quelle? Denk an Urheberschaft,
+Datumsangaben, Bewertungen und Anhänge.
+
+&gt; **Hinweis:** Diese Liste darf nicht nachträglich geändert werden. Sie ist der
+&gt; Vergleichsmaßstab, nicht die Lösung.
+
+### Die Auswahl treffen
+
+Öffne die Zusammenführung und sieh Dir die Zielhierarchie an. Wähl eine Unterseite
+bewusst ab und achte darauf, wie sich die Anzeige der übergeordneten Einträge
+verändert.
+
+&gt; **Hinweis:** Die Kästchen haben mehr als zwei Zustände. Finde heraus, was jeder
+&gt; bedeutet, bevor Du fortfährst.
+
+### Ausführen
+
+Führe die Zusammenführung aus. Schreib in den Bestätigungsdialog, warum Du sie
+durchführst.
+
+### Vergleichen
+
+Geh Deine Vorhersage Punkt für Punkt durch und prüfe sie am Ergebnis. Notiere die
+Abweichungen – gerade die, bei denen Du zu optimistisch warst.
+
+### Den Ursprung prüfen
+
+Sieh Dir die Quelle noch einmal an und stell fest, ob sich dort etwas verändert
+hat.
+
+### Die Ankündigung schreiben
+
+Formuliere in fünf Zeilen, was Du dem Fachbereich vor einer solchen
+Zusammenführung sagen würdest.
+
+## Reflexionsfragen
+
+- Was hast Du vorhergesagt, und was ist tatsächlich verloren gegangen? Wo lagst Du
+  daneben?
+- Wie hättest Du diese Zusammenführung dem Fachbereich vorher angekündigt?
+- Ihr wollt eine wichtige Community regelmäßig automatisch sichern lassen. Was
+  tut Ihr vorher – und warum?</textarea>
+    </main><aside class="avd-academy-guide-sidebar"><details class="avd-academy-guide-side avd-academy-guide-side--toc avd-academy-fold" data-avd-academy-toc-box
+               data-avd-academy-toc-grenze="12" open hidden>
+        <summary class="avd-academy-guide-side__label">Auf dieser Seite</summary>
+        <nav class="avd-academy-toc avd-academy-fold__body" data-avd-academy-toc aria-label="Inhaltsverzeichnis"></nav>
+      </details>
+      <div class="avd-academy-guide-side avd-academy-guide-side--bordered" data-avd-academy-progress hidden><div class="avd-academy-guide-side__label">Fortschritt</div>
+        <div class="avd-academy-progress__bar"><div class="avd-academy-progress__fill"></div></div>
+        <div class="avd-academy-progress__text"></div>
+      </div>
+    </aside>
+  </div><div class="avd-academy-print-contact" aria-hidden="true">
+    <span>Kontakt: https://academy.atvantage-academy.workers.dev/</span>
+    <span>academy@atvantage.com</span>
+  </div>
+
+  <footer class="avd-academy-footer">
+  <div class="avd-academy-footer__grid">
+    <div>
+      <strong>HCL Connections (Academy)</strong>
+      <p>Schulungsunterlagen der ATVANTAGE Academy.</p>
+    </div><div>
+      <strong>Kontakt</strong>
+      <p><a href="https://academy.atvantage-academy.workers.dev/" target="_blank" rel="noopener">Website</a><br><a href="mailto:academy@atvantage.com">academy@atvantage.com</a><br>
+      </p>
+    </div></div>
+  <div class="avd-academy-footer__legal">
+    © <span data-avd-academy-year>2026</span> ATVANTAGE
+  </div>
+</footer>
+
+</body>
+</html>

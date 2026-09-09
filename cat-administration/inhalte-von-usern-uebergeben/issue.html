@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!--
+  ATVANTAGE-Academy – EINZIGES Seitenlayout (Jekyll)
+  --------------------------------------------------
+  Ein Layout für alles: allgemeine Doku-Seiten UND Guides (Übungen/Anleitungen).
+  Optik nach der ATVANTAGE-Website: Meta-Nav, weiße sticky Kopfzeile, Hero-Band,
+  zweispaltig mit rechter Sidebar (automatisches Inhaltsverzeichnis, Fortschritt
+  aus Task-Listen, weiterführende Ressourcen). Überschriften ohne Emoji-Icons.
+
+  Verwendung im Front Matter:  layout: default   (oder `layout: guide` – Alias,
+  siehe guide.html; beides rendert dieselbe Guide-Ansicht)
+
+  `layout: visualization` (siehe visualization.html) rendert dieselbe Seite OHNE
+  obere Navigation (Meta-Leiste + Kopfzeile/TopNav), OHNE Brotkrumen und OHNE den
+  rechten Bereich (Inhaltsverzeichnis, Fortschritt, Ressourcen – auch bei gesetztem
+  `resources`), mit schmalerem Hero-Balken und breiterem, zentriertem Inhalt – für
+  eigenständige Visualisierungen/Simulationen.
+
+  Alle Front-Matter-Felder sind OPTIONAL (Convention over Configuration). Nur der
+  Titel ist faktisch erforderlich – als `title:` ODER als erste `#`-Überschrift:
+
+    title:       "…"                → sonst erste #-Überschrift (eins von beiden nötig)
+    description: "…"                → Meta-Description
+    duration:    8                  → Zahl in Minuten → Hero-Tag „ca. 8 Minuten“
+                                       (ungefähre LESEDAUER; bei Guides/Übungen die
+                                       Dauer der Übung, bei Visualisierungen die
+                                       Bearbeitungszeit – dort unüblich, aber erlaubt).
+    topics:      ["Cloud & DevOps"] → weitere Hero-Tags
+    resources:   [{title, url, icon}, …] → Sidebar-Karte „Weiterführende Informationen“.
+                                       title und/oder icon (Bildpfad); icon erscheint
+                                       rechts und wird kreisrund dargestellt.
+    breadcrumb:                     → Brotkrumen anpassen (beides optional):
+      label: "…"                    → überschreibt den Ordnernamen dieser Ebene;
+                                       in der Ordner-`index.md` gesetzt gilt es für
+                                       ALLE Seiten im Ordner und in Unterordnern.
+      ancestors: [{title, url}, …]  → explizite Vorfahren-Kette OHNE die aktuelle
+                                       Seite (diese wird automatisch angehängt); in
+                                       der `index.md` gesetzt wird sie vererbt.
+
+  „Markdown kopieren“ (Button im Hero) erscheint NUR auf Guides – dort ist das
+  Übernehmen des Quelltexts der Zweck. Bedingungen: Markdown-Seite (`.md`, nicht
+  reines HTML) UND der Schalter `toolbar.copy` (Vorgabe: nur `layout: guide`, siehe
+  `_includes/avd-switch.html`). Doku-Seiten und Visualisierungen haben ihn nicht –
+  bei letzteren, weil ihr Inhalt nicht sinnvoll als Markdown kopierbar ist.
+
+  DIE SEITENWERKZEUGE – QR-Code, Farbschema-Umschalter, Drucken – sind EINE
+  Komponente (`_includes/tools.html`) an zwei Standorten in diesem Rahmen:
+
+    Kopfzeile   `chrome: true`  (page, guide)      QR + Farbschema
+    Hero rechts `hero_tools`    (visualization)    QR + Farbschema + Drucken
+
+  Die Regel dahinter ist die Kopfzeile: Wo es sie gibt, tragen die Werkzeuge sie;
+  wo nicht, tritt der Hero an ihre Stelle. Drucken gibt es nur dort, weil auf einer
+  gewöhnlichen Seite der Browser-Befehl (Strg/Cmd+P) genügt, die rahmenlose
+  Ansicht aber keinen anderen Weg aufs Papier hat.
+
+  Der QR-Code wird erst im Browser erzeugt (theme/academy/atvantage.js), weil die
+  Adresse zur Build-Zeit nicht feststeht; ohne JavaScript erscheint er nicht.
+--><html lang="de">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Einen Austritt sauber abwickeln · HCL Connections (Academy)</title>
+<meta name="description" content="Alle Inhalte einer ausgeschiedenen Person sichten, eine Nachfolge bestimmen und die Reihenfolge richtig wählen."><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1788958243">
+<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1788958243" defer></script>
+<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1788958243" defer></script>
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1788958243">
+<script type="module">
+  const _hlbase = "/training-material-hcl-connections/theme/academy/hljs/";
+  Promise.all([import(_hlbase + "core.min.js"), import(_hlbase + "java.min.js")])
+    .then(([core, java]) => {
+      const hljs = core.default;
+      hljs.registerLanguage("java", java.default);
+      document.querySelectorAll("pre code.language-java").forEach((el) => hljs.highlightElement(el));
+    });
+</script>
+<link rel="apple-touch-icon" sizes="180x180" href="/training-material-hcl-connections/theme/atvantage/assets/icon-180.png">
+<link rel="icon" href="/training-material-hcl-connections/theme/atvantage/assets/logo-orange.svg">
+<link rel="icon" sizes="16x16" href="/training-material-hcl-connections/theme/atvantage/assets/icon-16.png">
+
+  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1788958243">
+  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1788958243"></head><body class="avd-academy-guide">
+  <a class="avd-academy-skip-link" href="#avd-academy-content">Zum Inhalt springen</a><div class="avd-academy-metanav">
+    <span>ATVANTAGE Academy</span>
+  </div>
+
+  <header class="avd-academy-header">
+  <a class="avd-academy-header__brand" href="/training-material-hcl-connections/" aria-label="Startseite">
+    <img class="avd-academy-header__logo"
+         src="/training-material-hcl-connections/assets/logo-schulung.svg"
+         alt="ATVANTAGE Academy">
+  </a>
+  <button class="avd-academy-btn avd-academy-btn--ghost avd-academy-header__burger" data-avd-academy-nav-toggle="#avd-academy-main-nav"
+          aria-label="Navigation umschalten" aria-expanded="false">☰</button>
+  <nav class="avd-academy-header__nav" id="avd-academy-main-nav"><a href="/training-material-hcl-connections/">Start</a><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
+  </nav><div class="avd-academy-header__tools"><button type="button" class="avd-academy-qr" data-avd-academy-qr hidden
+                title="Diese Seite auf Deinem Smartphone öffnen"
+                aria-label="Diese Seite auf Deinem Smartphone öffnen"></button><button type="button" class="avd-academy-tool avd-academy-tool--theme avd-academy-theme-toggle" data-avd-academy-theme-toggle
+              title="Farbschema umschalten (hell/dunkel)"
+              aria-label="Farbschema umschalten">◐</button></div>
+</header>
+
+  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><span>/</span><span aria-current="page">Einen Austritt sauber abwickeln</span></nav><div class="avd-academy-guide-hero__meta">
+      <div class="avd-academy-guide-hero__tags"><span class="avd-academy-tag avd-academy-tag--time">ca. 10 Minuten</span><span class="avd-academy-tag">Content Management</span><span class="avd-academy-tag">Nutzerlebenszyklus</span>
+      </div>
+      <div class="avd-academy-guide-hero__actions">
+        <button type="button" class="avd-academy-btn avd-academy-btn--ghost avd-academy-copy-md"
+                data-avd-academy-copy-md="#avd-academy-md-source"
+                title="Markdown kopieren" aria-label="Markdown kopieren"></button>
+      </div>
+    </div><h1>Einen Austritt sauber abwickeln</h1>
+  </section><div class="avd-academy-guide-layout">
+    <main class="avd-academy-guide-main avd-academy-guide-main--numbered" id="avd-academy-content">
+      <h1 id="einen-austritt-sauber-abwickeln">Einen Austritt sauber abwickeln</h1>
+
+<p><strong>Als</strong> Person, die einen Austritt umsetzen soll, <strong>möchte ich</strong> vor dem ersten
+Eingriff wissen, was alles an dieser Person hängt, <strong>damit</strong> nichts verloren geht,
+das der Fachbereich in drei Wochen sucht.</p>
+
+<h2 id="lernziele">Lernziele</h2>
+
+<p>Du…</p>
+
+<ul>
+  <li>verschaffst Dir einen vollständigen Überblick über die Inhalte einer Person.</li>
+  <li>entscheidest je Inhaltsart zwischen Übergabe, Freigabe und Löschung und
+begründest die Entscheidung.</li>
+  <li>bringst die Schritte in eine Reihenfolge, die Dir später keine Arbeit macht.</li>
+  <li>findest Inhalte, die niemandem mehr gehören.</li>
+</ul>
+
+<h2 id="definition-of-done">Definition of Done</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast eine Liste aller Inhalte der Person, nach Anwendung sortiert.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Zu jeder Inhaltsart steht eine Entscheidung mit einem Satz Begründung.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die Schritte nummeriert und kannst die Reihenfolge begründen.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast benannt, wer der Übergabe fachlich zustimmen muss.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die Reflexionsfragen schriftlich beantwortet.</li>
+</ul>
+
+<h2 id="arbeitsschritte">Arbeitsschritte</h2>
+
+<blockquote>
+  <p><strong>Nur an einem Wegwerf-Profil.</strong> Auch wenn bei Dir gerade ein echter Austritt
+ansteht: In dieser Übung wird an einem eigens angelegten Testprofil oder an der
+Fallbeschreibung gearbeitet.</p>
+</blockquote>
+
+<h3 id="erst-sehen">Erst sehen</h3>
+
+<p>Verschaff Dir einen Überblick, was der Person gehört – über alle Anwendungen
+hinweg. Schreib es auf, bevor Du irgendetwas tust.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Erwarte Überraschungen. Die Ablagen, an die niemand denkt, sind die,
+die später gesucht werden.</p>
+</blockquote>
+
+<h3 id="nach-wert-sortieren">Nach Wert sortieren</h3>
+
+<p>Geh Deine Liste durch und markiere je Eintrag, ob andere Menschen damit arbeiten
+oder ob es eine private Ablage war.</p>
+
+<h3 id="je-inhaltsart-entscheiden">Je Inhaltsart entscheiden</h3>
+
+<p>Entscheide für jede Zeile: übergeben, zusätzlich freigeben oder löschen. Schreib
+je Entscheidung einen Satz Begründung.</p>
+
+<h3 id="die-reihenfolge-festlegen">Die Reihenfolge festlegen</h3>
+
+<p>Nummeriere Deine Schritte. Überleg dabei, welcher Schritt einen anderen erschwert,
+wenn er zu früh kommt.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Ein Schritt macht die Person in Auswahlfeldern unsichtbar. Er
+gehört nicht an den Anfang.</p>
+</blockquote>
+
+<h3 id="die-nachfolge-eintragen">Die Nachfolge eintragen</h3>
+
+<p>Bestimme für mindestens eine Inhaltsart eine Nachfolge und führe die Übergabe aus.
+Schreib in den Bestätigungsdialog einen Kommentar, der den Anlass festhält.</p>
+
+<h3 id="nach-verwaistem-suchen">Nach Verwaistem suchen</h3>
+
+<p>Such anschließend nach Inhalten, die keinen aktiven Eigentümer mehr haben. Prüfe,
+ob durch Deinen Vorgang etwas dazugekommen ist.</p>
+
+<h3 id="die-zuständigkeit-klären">Die Zuständigkeit klären</h3>
+
+<p>Notiere, wer in Deinem Haus fachlich entscheidet, wer neuer Eigentümer wird – und
+was Du tust, wenn diese Rolle nicht benannt ist.</p>
+
+<h2 id="reflexionsfragen">Reflexionsfragen</h2>
+
+<ul>
+  <li>Welche Inhalte hast Du übergeben, welche gelöscht – und woran hast Du das
+entschieden?</li>
+  <li>Warum ist die Reihenfolge Deiner Schritte wichtiger, als sie zunächst aussieht?</li>
+  <li>Wer entscheidet in Deinem Haus, wer neuer Eigentümer wird? Warum sollte das
+nicht die Administration sein?</li>
+</ul>
+
+
+<textarea id="avd-academy-md-source" hidden aria-hidden="true"># Einen Austritt sauber abwickeln
+
+**Als** Person, die einen Austritt umsetzen soll, **möchte ich** vor dem ersten
+Eingriff wissen, was alles an dieser Person hängt, **damit** nichts verloren geht,
+das der Fachbereich in drei Wochen sucht.
+
+## Lernziele
+
+Du…
+
+- verschaffst Dir einen vollständigen Überblick über die Inhalte einer Person.
+- entscheidest je Inhaltsart zwischen Übergabe, Freigabe und Löschung und
+  begründest die Entscheidung.
+- bringst die Schritte in eine Reihenfolge, die Dir später keine Arbeit macht.
+- findest Inhalte, die niemandem mehr gehören.
+
+## Definition of Done
+
+* [ ] Du hast eine Liste aller Inhalte der Person, nach Anwendung sortiert.
+* [ ] Zu jeder Inhaltsart steht eine Entscheidung mit einem Satz Begründung.
+* [ ] Du hast die Schritte nummeriert und kannst die Reihenfolge begründen.
+* [ ] Du hast benannt, wer der Übergabe fachlich zustimmen muss.
+* [ ] Du hast die Reflexionsfragen schriftlich beantwortet.
+
+## Arbeitsschritte
+
+&gt; **Nur an einem Wegwerf-Profil.** Auch wenn bei Dir gerade ein echter Austritt
+&gt; ansteht: In dieser Übung wird an einem eigens angelegten Testprofil oder an der
+&gt; Fallbeschreibung gearbeitet.
+
+### Erst sehen
+
+Verschaff Dir einen Überblick, was der Person gehört – über alle Anwendungen
+hinweg. Schreib es auf, bevor Du irgendetwas tust.
+
+&gt; **Hinweis:** Erwarte Überraschungen. Die Ablagen, an die niemand denkt, sind die,
+&gt; die später gesucht werden.
+
+### Nach Wert sortieren
+
+Geh Deine Liste durch und markiere je Eintrag, ob andere Menschen damit arbeiten
+oder ob es eine private Ablage war.
+
+### Je Inhaltsart entscheiden
+
+Entscheide für jede Zeile: übergeben, zusätzlich freigeben oder löschen. Schreib
+je Entscheidung einen Satz Begründung.
+
+### Die Reihenfolge festlegen
+
+Nummeriere Deine Schritte. Überleg dabei, welcher Schritt einen anderen erschwert,
+wenn er zu früh kommt.
+
+&gt; **Hinweis:** Ein Schritt macht die Person in Auswahlfeldern unsichtbar. Er
+&gt; gehört nicht an den Anfang.
+
+### Die Nachfolge eintragen
+
+Bestimme für mindestens eine Inhaltsart eine Nachfolge und führe die Übergabe aus.
+Schreib in den Bestätigungsdialog einen Kommentar, der den Anlass festhält.
+
+### Nach Verwaistem suchen
+
+Such anschließend nach Inhalten, die keinen aktiven Eigentümer mehr haben. Prüfe,
+ob durch Deinen Vorgang etwas dazugekommen ist.
+
+### Die Zuständigkeit klären
+
+Notiere, wer in Deinem Haus fachlich entscheidet, wer neuer Eigentümer wird – und
+was Du tust, wenn diese Rolle nicht benannt ist.
+
+## Reflexionsfragen
+
+- Welche Inhalte hast Du übergeben, welche gelöscht – und woran hast Du das
+  entschieden?
+- Warum ist die Reihenfolge Deiner Schritte wichtiger, als sie zunächst aussieht?
+- Wer entscheidet in Deinem Haus, wer neuer Eigentümer wird? Warum sollte das
+  nicht die Administration sein?</textarea>
+    </main><aside class="avd-academy-guide-sidebar"><details class="avd-academy-guide-side avd-academy-guide-side--toc avd-academy-fold" data-avd-academy-toc-box
+               data-avd-academy-toc-grenze="12" open hidden>
+        <summary class="avd-academy-guide-side__label">Auf dieser Seite</summary>
+        <nav class="avd-academy-toc avd-academy-fold__body" data-avd-academy-toc aria-label="Inhaltsverzeichnis"></nav>
+      </details>
+      <div class="avd-academy-guide-side avd-academy-guide-side--bordered" data-avd-academy-progress hidden><div class="avd-academy-guide-side__label">Fortschritt</div>
+        <div class="avd-academy-progress__bar"><div class="avd-academy-progress__fill"></div></div>
+        <div class="avd-academy-progress__text"></div>
+      </div>
+    </aside>
+  </div><div class="avd-academy-print-contact" aria-hidden="true">
+    <span>Kontakt: https://academy.atvantage-academy.workers.dev/</span>
+    <span>academy@atvantage.com</span>
+  </div>
+
+  <footer class="avd-academy-footer">
+  <div class="avd-academy-footer__grid">
+    <div>
+      <strong>HCL Connections (Academy)</strong>
+      <p>Schulungsunterlagen der ATVANTAGE Academy.</p>
+    </div><div>
+      <strong>Kontakt</strong>
+      <p><a href="https://academy.atvantage-academy.workers.dev/" target="_blank" rel="noopener">Website</a><br><a href="mailto:academy@atvantage.com">academy@atvantage.com</a><br>
+      </p>
+    </div></div>
+  <div class="avd-academy-footer__legal">
+    © <span data-avd-academy-year>2026</span> ATVANTAGE
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!--
+  ATVANTAGE-Academy – EINZIGES Seitenlayout (Jekyll)
+  --------------------------------------------------
+  Ein Layout für alles: allgemeine Doku-Seiten UND Guides (Übungen/Anleitungen).
+  Optik nach der ATVANTAGE-Website: Meta-Nav, weiße sticky Kopfzeile, Hero-Band,
+  zweispaltig mit rechter Sidebar (automatisches Inhaltsverzeichnis, Fortschritt
+  aus Task-Listen, weiterführende Ressourcen). Überschriften ohne Emoji-Icons.
+
+  Verwendung im Front Matter:  layout: default   (oder `layout: guide` – Alias,
+  siehe guide.html; beides rendert dieselbe Guide-Ansicht)
+
+  `layout: visualization` (siehe visualization.html) rendert dieselbe Seite OHNE
+  obere Navigation (Meta-Leiste + Kopfzeile/TopNav), OHNE Brotkrumen und OHNE den
+  rechten Bereich (Inhaltsverzeichnis, Fortschritt, Ressourcen – auch bei gesetztem
+  `resources`), mit schmalerem Hero-Balken und breiterem, zentriertem Inhalt – für
+  eigenständige Visualisierungen/Simulationen.
+
+  Alle Front-Matter-Felder sind OPTIONAL (Convention over Configuration). Nur der
+  Titel ist faktisch erforderlich – als `title:` ODER als erste `#`-Überschrift:
+
+    title:       "…"                → sonst erste #-Überschrift (eins von beiden nötig)
+    description: "…"                → Meta-Description
+    duration:    8                  → Zahl in Minuten → Hero-Tag „ca. 8 Minuten“
+                                       (ungefähre LESEDAUER; bei Guides/Übungen die
+                                       Dauer der Übung, bei Visualisierungen die
+                                       Bearbeitungszeit – dort unüblich, aber erlaubt).
+    topics:      ["Cloud & DevOps"] → weitere Hero-Tags
+    resources:   [{title, url, icon}, …] → Sidebar-Karte „Weiterführende Informationen“.
+                                       title und/oder icon (Bildpfad); icon erscheint
+                                       rechts und wird kreisrund dargestellt.
+    breadcrumb:                     → Brotkrumen anpassen (beides optional):
+      label: "…"                    → überschreibt den Ordnernamen dieser Ebene;
+                                       in der Ordner-`index.md` gesetzt gilt es für
+                                       ALLE Seiten im Ordner und in Unterordnern.
+      ancestors: [{title, url}, …]  → explizite Vorfahren-Kette OHNE die aktuelle
+                                       Seite (diese wird automatisch angehängt); in
+                                       der `index.md` gesetzt wird sie vererbt.
+
+  „Markdown kopieren“ (Button im Hero) erscheint NUR auf Guides – dort ist das
+  Übernehmen des Quelltexts der Zweck. Bedingungen: Markdown-Seite (`.md`, nicht
+  reines HTML) UND der Schalter `toolbar.copy` (Vorgabe: nur `layout: guide`, siehe
+  `_includes/avd-switch.html`). Doku-Seiten und Visualisierungen haben ihn nicht –
+  bei letzteren, weil ihr Inhalt nicht sinnvoll als Markdown kopierbar ist.
+
+  DIE SEITENWERKZEUGE – QR-Code, Farbschema-Umschalter, Drucken – sind EINE
+  Komponente (`_includes/tools.html`) an zwei Standorten in diesem Rahmen:
+
+    Kopfzeile   `chrome: true`  (page, guide)      QR + Farbschema
+    Hero rechts `hero_tools`    (visualization)    QR + Farbschema + Drucken
+
+  Die Regel dahinter ist die Kopfzeile: Wo es sie gibt, tragen die Werkzeuge sie;
+  wo nicht, tritt der Hero an ihre Stelle. Drucken gibt es nur dort, weil auf einer
+  gewöhnlichen Seite der Browser-Befehl (Strg/Cmd+P) genügt, die rahmenlose
+  Ansicht aber keinen anderen Weg aufs Papier hat.
+
+  Der QR-Code wird erst im Browser erzeugt (theme/academy/atvantage.js), weil die
+  Adresse zur Build-Zeit nicht feststeht; ohne JavaScript erscheint er nicht.
+--><html lang="de">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>In CAT ankommen · HCL Connections (Academy)</title>
+<meta name="description" content="Anmelden, den eigenen Funktionsumfang erkunden und die Suche so einsetzen, dass sie in großen Listen noch trägt."><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1788958243">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1788958243"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1788958243">
+<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1788958243" defer></script>
+<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1788958243" defer></script>
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1788958243">
+<script type="module">
+  const _hlbase = "/training-material-hcl-connections/theme/academy/hljs/";
+  Promise.all([import(_hlbase + "core.min.js"), import(_hlbase + "java.min.js")])
+    .then(([core, java]) => {
+      const hljs = core.default;
+      hljs.registerLanguage("java", java.default);
+      document.querySelectorAll("pre code.language-java").forEach((el) => hljs.highlightElement(el));
+    });
+</script>
+<link rel="apple-touch-icon" sizes="180x180" href="/training-material-hcl-connections/theme/atvantage/assets/icon-180.png">
+<link rel="icon" href="/training-material-hcl-connections/theme/atvantage/assets/logo-orange.svg">
+<link rel="icon" sizes="16x16" href="/training-material-hcl-connections/theme/atvantage/assets/icon-16.png">
+
+  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1788958243">
+  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1788958243"></head><body class="avd-academy-guide">
+  <a class="avd-academy-skip-link" href="#avd-academy-content">Zum Inhalt springen</a><div class="avd-academy-metanav">
+    <span>ATVANTAGE Academy</span>
+  </div>
+
+  <header class="avd-academy-header">
+  <a class="avd-academy-header__brand" href="/training-material-hcl-connections/" aria-label="Startseite">
+    <img class="avd-academy-header__logo"
+         src="/training-material-hcl-connections/assets/logo-schulung.svg"
+         alt="ATVANTAGE Academy">
+  </a>
+  <button class="avd-academy-btn avd-academy-btn--ghost avd-academy-header__burger" data-avd-academy-nav-toggle="#avd-academy-main-nav"
+          aria-label="Navigation umschalten" aria-expanded="false">☰</button>
+  <nav class="avd-academy-header__nav" id="avd-academy-main-nav"><a href="/training-material-hcl-connections/">Start</a><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
+  </nav><div class="avd-academy-header__tools"><button type="button" class="avd-academy-qr" data-avd-academy-qr hidden
+                title="Diese Seite auf Deinem Smartphone öffnen"
+                aria-label="Diese Seite auf Deinem Smartphone öffnen"></button><button type="button" class="avd-academy-tool avd-academy-tool--theme avd-academy-theme-toggle" data-avd-academy-theme-toggle
+              title="Farbschema umschalten (hell/dunkel)"
+              aria-label="Farbschema umschalten">◐</button></div>
+</header>
+
+  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a><span>/</span><span aria-current="page">In CAT ankommen</span></nav><div class="avd-academy-guide-hero__meta">
+      <div class="avd-academy-guide-hero__tags"><span class="avd-academy-tag avd-academy-tag--time">ca. 10 Minuten</span><span class="avd-academy-tag">CAT-Grundlagen</span><span class="avd-academy-tag">Bedienung</span>
+      </div>
+      <div class="avd-academy-guide-hero__actions">
+        <button type="button" class="avd-academy-btn avd-academy-btn--ghost avd-academy-copy-md"
+                data-avd-academy-copy-md="#avd-academy-md-source"
+                title="Markdown kopieren" aria-label="Markdown kopieren"></button>
+      </div>
+    </div><h1>In CAT ankommen</h1>
+  </section><div class="avd-academy-guide-layout">
+    <main class="avd-academy-guide-main avd-academy-guide-main--numbered" id="avd-academy-content">
+      <h1 id="in-cat-ankommen">In CAT ankommen</h1>
+
+<p><strong>Als</strong> Person, die Connections administriert, <strong>möchte ich</strong> wissen, was CAT mir
+zeigt und wie ich darin etwas finde, <strong>damit</strong> ich in den nächsten Übungen nicht
+an der Bedienung hängen bleibe.</p>
+
+<h2 id="lernziele">Lernziele</h2>
+
+<p>Du…</p>
+
+<ul>
+  <li>meldest Dich an CAT an und benennst die Bereiche, die Dir sichtbar sind.</li>
+  <li>schränkst eine Trefferliste mit Platzhaltern auf eine Gruppe von Einträgen ein.</li>
+  <li>beschreibst, was beim Bestätigen einer Änderung passiert und wo das später
+nachlesbar ist.</li>
+</ul>
+
+<h2 id="definition-of-done">Definition of Done</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast eine Liste der Bereiche, die Dir in CAT sichtbar sind – und der
+    Bereiche, von denen Du weißt, dass es sie gibt, die Du aber nicht siehst.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast eine Suche formuliert, die <strong>mehr als einen</strong> Treffer liefert, ohne
+    die ganze Liste anzuzeigen.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du kannst zeigen oder beschreiben, welches Feld CAT vor einer Änderung
+    verlangt.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Du hast die Reflexionsfragen schriftlich beantwortet.</li>
+</ul>
+
+<h2 id="arbeitsschritte">Arbeitsschritte</h2>
+
+<blockquote>
+  <p><strong>Zwei Wege.</strong> Hast Du Zugang zu einer CAT-Instanz, führe die Schritte dort aus.
+Hast Du keinen, entscheide dieselben Schritte am geteilten Bildschirm: Du sagst
+an, was geschehen soll, jemand anders klickt. Das Ergebnis der Übung ist Deine
+Entscheidung, nicht der Klick.</p>
+</blockquote>
+
+<h3 id="anmelden-und-den-eigenen-umfang-aufnehmen">Anmelden und den eigenen Umfang aufnehmen</h3>
+
+<p>Melde Dich mit Deinen Connections-Zugangsdaten an CAT an. Geh das Hauptmenü einmal
+von oben nach unten durch und notiere, welche Bereiche Du siehst.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Wenn Connections im selben Browser in einem anderen Tab offen ist,
+bist Du bei gleicher Adresse unter Umständen schon angemeldet.</p>
+</blockquote>
+
+<h3 id="eine-person-suchen">Eine Person suchen</h3>
+
+<p>Such eine beliebige Person, deren Namen Du kennst. Nutze zuerst den Vorschlag, der
+Dir beim Tippen angeboten wird.</p>
+
+<h3 id="eine-gruppe-von-personen-suchen">Eine Gruppe von Personen suchen</h3>
+
+<p>Such jetzt <strong>nicht</strong> eine bestimmte Person, sondern alle, deren Nachname mit
+denselben drei Buchstaben beginnt. Der Vorschlag hilft Dir dabei nicht weiter.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Das Feld akzeptiert mehr als vollständige Namen. Probier aus, was
+passiert, wenn Du absichtlich unvollständig suchst und die Eingabe trotzdem
+abschickst.</p>
+</blockquote>
+
+<h3 id="herausfinden-was-vor-einer-änderung-passiert">Herausfinden, was vor einer Änderung passiert</h3>
+
+<p>Ruf eine Funktion auf, die etwas ändern würde – <strong>führe sie nicht aus</strong>. Sieh Dir
+an, was CAT von Dir verlangt, bevor es die Änderung übernimmt, und brich dann ab.</p>
+
+<blockquote>
+  <p><strong>Hinweis:</strong> Abbrechen ist hier das Ziel, nicht das Scheitern. Es geht darum zu
+sehen, was der Dialog wissen will.</p>
+</blockquote>
+
+<h3 id="eine-unbekannte-funktion-erschließen">Eine unbekannte Funktion erschließen</h3>
+
+<p>Wähle einen Menüpunkt, den Du gesehen, aber noch nie benutzt hast. Öffne ihn,
+ohne etwas auszuführen, und leite aus Bezeichnung, Eingabefeldern und
+Schaltflächen ab, was er tut. Notiere Dir das in einem Satz – und dazu, was Du
+noch nicht sicher weißt.</p>
+
+<h2 id="reflexionsfragen">Reflexionsfragen</h2>
+
+<ul>
+  <li>Welche Menüpunkte siehst Du – und welche nicht? Woran könnte das liegen, und an
+wen würdest Du Dich wenden?</li>
+  <li>Wozu ist der Kommentar beim Bestätigen gut, wenn Name und Datum ohnehin
+protokolliert werden?</li>
+  <li>Wann hilft der Platzhalter mehr als der Vorschlag aus der Eingabehilfe? Nenne
+einen Fall aus Deinem Alltag.</li>
+</ul>
+
+
+<textarea id="avd-academy-md-source" hidden aria-hidden="true"># In CAT ankommen
+
+**Als** Person, die Connections administriert, **möchte ich** wissen, was CAT mir
+zeigt und wie ich darin etwas finde, **damit** ich in den nächsten Übungen nicht
+an der Bedienung hängen bleibe.
+
+## Lernziele
+
+Du…
+
+- meldest Dich an CAT an und benennst die Bereiche, die Dir sichtbar sind.
+- schränkst eine Trefferliste mit Platzhaltern auf eine Gruppe von Einträgen ein.
+- beschreibst, was beim Bestätigen einer Änderung passiert und wo das später
+  nachlesbar ist.
+
+## Definition of Done
+
+* [ ] Du hast eine Liste der Bereiche, die Dir in CAT sichtbar sind – und der
+      Bereiche, von denen Du weißt, dass es sie gibt, die Du aber nicht siehst.
+* [ ] Du hast eine Suche formuliert, die **mehr als einen** Treffer liefert, ohne
+      die ganze Liste anzuzeigen.
+* [ ] Du kannst zeigen oder beschreiben, welches Feld CAT vor einer Änderung
+      verlangt.
+* [ ] Du hast die Reflexionsfragen schriftlich beantwortet.
+
+## Arbeitsschritte
+
+&gt; **Zwei Wege.** Hast Du Zugang zu einer CAT-Instanz, führe die Schritte dort aus.
+&gt; Hast Du keinen, entscheide dieselben Schritte am geteilten Bildschirm: Du sagst
+&gt; an, was geschehen soll, jemand anders klickt. Das Ergebnis der Übung ist Deine
+&gt; Entscheidung, nicht der Klick.
+
+### Anmelden und den eigenen Umfang aufnehmen
+
+Melde Dich mit Deinen Connections-Zugangsdaten an CAT an. Geh das Hauptmenü einmal
+von oben nach unten durch und notiere, welche Bereiche Du siehst.
+
+&gt; **Hinweis:** Wenn Connections im selben Browser in einem anderen Tab offen ist,
+&gt; bist Du bei gleicher Adresse unter Umständen schon angemeldet.
+
+### Eine Person suchen
+
+Such eine beliebige Person, deren Namen Du kennst. Nutze zuerst den Vorschlag, der
+Dir beim Tippen angeboten wird.
+
+### Eine Gruppe von Personen suchen
+
+Such jetzt **nicht** eine bestimmte Person, sondern alle, deren Nachname mit
+denselben drei Buchstaben beginnt. Der Vorschlag hilft Dir dabei nicht weiter.
+
+&gt; **Hinweis:** Das Feld akzeptiert mehr als vollständige Namen. Probier aus, was
+&gt; passiert, wenn Du absichtlich unvollständig suchst und die Eingabe trotzdem
+&gt; abschickst.
+
+### Herausfinden, was vor einer Änderung passiert
+
+Ruf eine Funktion auf, die etwas ändern würde – **führe sie nicht aus**. Sieh Dir
+an, was CAT von Dir verlangt, bevor es die Änderung übernimmt, und brich dann ab.
+
+&gt; **Hinweis:** Abbrechen ist hier das Ziel, nicht das Scheitern. Es geht darum zu
+&gt; sehen, was der Dialog wissen will.
+
+### Eine unbekannte Funktion erschließen
+
+Wähle einen Menüpunkt, den Du gesehen, aber noch nie benutzt hast. Öffne ihn,
+ohne etwas auszuführen, und leite aus Bezeichnung, Eingabefeldern und
+Schaltflächen ab, was er tut. Notiere Dir das in einem Satz – und dazu, was Du
+noch nicht sicher weißt.
+
+## Reflexionsfragen
+
+- Welche Menüpunkte siehst Du – und welche nicht? Woran könnte das liegen, und an
+  wen würdest Du Dich wenden?
+- Wozu ist der Kommentar beim Bestätigen gut, wenn Name und Datum ohnehin
+  protokolliert werden?
+- Wann hilft der Platzhalter mehr als der Vorschlag aus der Eingabehilfe? Nenne
+  einen Fall aus Deinem Alltag.</textarea>
+    </main><aside class="avd-academy-guide-sidebar"><details class="avd-academy-guide-side avd-academy-guide-side--toc avd-academy-fold" data-avd-academy-toc-box
+               data-avd-academy-toc-grenze="12" open hidden>
+        <summary class="avd-academy-guide-side__label">Auf dieser Seite</summary>
+        <nav class="avd-academy-toc avd-academy-fold__body" data-avd-academy-toc aria-label="Inhaltsverzeichnis"></nav>
+      </details>
+      <div class="avd-academy-guide-side avd-academy-guide-side--bordered" data-avd-academy-progress hidden><div class="avd-academy-guide-side__label">Fortschritt</div>
+        <div class="avd-academy-progress__bar"><div class="avd-academy-progress__fill"></div></div>
+        <div class="avd-academy-progress__text"></div>
+      </div>
+    </aside>
+  </div><div class="avd-academy-print-contact" aria-hidden="true">
+    <span>Kontakt: https://academy.atvantage-academy.workers.dev/</span>
+    <span>academy@atvantage.com</span>
+  </div>
+
+  <footer class="avd-academy-footer">
+  <div class="avd-academy-footer__grid">
+    <div>
+      <strong>HCL Connections (Academy)</strong>
+      <p>Schulungsunterlagen der ATVANTAGE Academy.</p>
+    </div><div>
+      <strong>Kontakt</strong>
+      <p><a href="https://academy.atvantage-academy.workers.dev/" target="_blank" rel="noopener">Website</a><br><a href="mailto:academy@atvantage.com">academy@atvantage.com</a><br>
+      </p>
+    </div></div>
+  <div class="avd-academy-footer__legal">
+    © <span data-avd-academy-year>2026</span> ATVANTAGE
+  </div>
+</footer>
+
+</body>
+</html>
