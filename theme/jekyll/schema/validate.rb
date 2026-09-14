@@ -204,14 +204,51 @@ end
 # bestandene Prüfung und ist keine.
 IMMER_AUS = %w[theme dist vendor _site].freeze
 
-def uebersprungen?(rel, ausschluss)
+# Die Verzeichnisse der Collections – aus `collections` und `collections_dir` der
+# Konfiguration. `_posts` ist IMMER dabei: Diese Collection kennt Jekyll eingebaut, sie
+# steht in keiner `collections:`-Liste, und ihre Dokumente werden gerendert.
+#
+# WOFÜR: Ein Collection-Dokument ist eine Quelle wie eine Seite – es hat Front Matter,
+# wird gerendert und bekommt eine Adresse. Die `_`-Regel unten hat es trotzdem
+# ausgelassen, und die Schlussmeldung sagte danach „N Seite(n) geprüft, keine
+# Verstöße“, als wäre nichts übrig geblieben. Eine Auswahl, die stillschweigend Dateien
+# auslässt, sieht aus wie eine bestandene Prüfung und ist keine – dieselbe Begründung
+# wie bei IMMER_AUS.
+def sammlungsverzeichnisse(konfigurationen)
+  namen = ['posts']
+  wurzel = ''
+  konfigurationen.each do |daten|
+    erklaert = daten['collections']
+    namen += case erklaert
+             when Hash  then erklaert.keys
+             when Array then erklaert
+             else []
+             end
+    wurzel = daten['collections_dir'].to_s if daten['collections_dir']
+  end
+  namen.map(&:to_s).uniq.map { |n| [wurzel, "_#{n}"].reject(&:empty?).join('/') }
+end
+
+# Liegt die Datei in einer Collection? Geprüft wird der PFADANFANG und nicht ein
+# einzelnes Segment: Eine Collection gibt es genau dort, wo Jekyll sie erwartet – im
+# Wurzelverzeichnis der Quelle bzw. unter `collections_dir`. Ein `en/_neuigkeiten/`
+# unter einem Sprachbaum ist KEINE Collection; Jekyll rendert es nicht, und die Prüfung
+# würde sonst Dateien melden, die gar nicht in die Site kommen.
+def in_sammlung?(rel, sammlungen)
+  sammlungen.any? { |verzeichnis| rel.start_with?(verzeichnis + '/') }
+end
+
+def uebersprungen?(rel, ausschluss, sammlungen = [])
   teile = rel.split('/')
   return true if teile.any? { |t| t.start_with?('.') }
   return true if teile.include?('node_modules')
   return true if IMMER_AUS.include?(teile.first) || teile.first.start_with?('_site')
-  # Jekyll rendert `_`-Verzeichnisse nicht (Collections ausgenommen – die gibt es
-  # in Academy-Repos nicht; käme eine hinzu, gehört sie hier ergänzt).
-  return true if teile[0..-2].any? { |t| t.start_with?('_') }
+  # Jekyll rendert `_`-Verzeichnisse nicht – AUSGENOMMEN die Collections, die die
+  # Konfiguration erklärt. Deren Dokumente werden wie Seiten geprüft; `_data`,
+  # `_includes`, `_layouts` und alles übrige bleiben draußen.
+  unless in_sammlung?(rel, sammlungen)
+    return true if teile[0..-2].any? { |t| t.start_with?('_') }
+  end
   # Jekylls `exclude`-Semantik: Pfade RELATIV zur Quelle. `README.md` schließt also
   # nur die im Wurzelverzeichnis aus, `**/README.md` alle. Deshalb KEIN Rückfall auf
   # den Dateinamen – der schlösse zu viel aus.
@@ -639,19 +676,24 @@ if sprachcodes.any? && !sprachcodes.include?(standardsprache)
                'mit in die Deklaration – ihr Sprachbaum ist die Wurzel der Site.'
 end
 
-# --- Front Matter aller Seiten ------------------------------------------
+# --- Front Matter aller Seiten und Collection-Dokumente ------------------
+# Die Collections stehen erst hier fest: Sie können in einem Overlay erklärt werden,
+# und gelesen sind alle Konfigurationen erst nach der Schleife oben.
+sammlungen = sammlungsverzeichnisse(konfigurationen_daten.map { |_, _, daten| daten })
 seiten = 0
+sammlungsseiten = 0
 uebersetzungen = {}
 dateinamen = {}
 Dir.glob(File.join(wurzel, '**', '*.{md,markdown,html}')).sort.each do |pfad|
   rel = pfad.sub(/\A#{Regexp.escape(wurzel)}\/?/, '')
-  next if uebersprungen?(rel, ausschluss)
+  next if uebersprungen?(rel, ausschluss, sammlungen)
   daten, fehler = front_matter(pfad)
   if fehler
     meldungen << "#{rel}: #{fehler}"
     next
   end
   seiten += 1
+  sammlungsseiten += 1 if in_sammlung?(rel, sammlungen)
 
   # ZWEI WEGE, EINE SEITE ZU ADRESSIEREN – dieselbe Rangfolge wie in avd-page-url.html:
   # die ausdrückliche `page_id`, sonst der Dateiname ohne Endung.
@@ -758,7 +800,11 @@ end
 if meldungen.empty?
   zg = zielgruppen.uniq.empty? ? 'keine Zielgruppen deklariert' : "Zielgruppen: #{zielgruppen.uniq.join(', ')}"
   spr = sprachcodes.empty? ? 'einsprachig' : "Sprachen: #{sprachcodes.join(', ')}"
-  puts "Schema #{version}: #{configs.size} Konfiguration(en) und #{seiten} Seite(n) geprüft, #{zg}, #{spr} – keine Verstöße."
+  # Die Collection-Dokumente werden EIGENS genannt: Wer eine Collection anlegt, soll der
+  # Meldung ansehen, dass sie mit geprüft wurde – und nicht raten müssen, ob die Zahl
+  # sie enthält.
+  aus_sammlungen = sammlungsseiten.zero? ? '' : " (darunter #{sammlungsseiten} aus Collections)"
+  puts "Schema #{version}: #{configs.size} Konfiguration(en) und #{seiten} Seite(n)#{aus_sammlungen} geprüft, #{zg}, #{spr} – keine Verstöße."
   exit 0
 end
 

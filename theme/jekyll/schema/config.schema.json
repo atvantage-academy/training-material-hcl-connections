@@ -124,8 +124,38 @@
       "description": "JEKYLL-STANDARD – bricht den Build bei syntaktisch fehlerhaftem Front Matter ab. Prüft NUR die YAML-Syntax – die Feldnamen prüft dieses Schema."
     },
     "collections": {
+      "type": [
+        "object",
+        "array"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "JEKYLL-STANDARD – eigene Collections. Als Abschnitt (`neuigkeiten: { output: true }`) oder als bloße Namensliste. Die Schema-Prüfung liest diesen Schlüssel: Dokumente der hier erklärten Collections werden wie Seiten geprüft – zusammen mit `_posts`, das Jekyll eingebaut kennt."
+    },
+    "relative_links": {
       "type": "object",
-      "description": "JEKYLL-STANDARD – eigene Collections."
+      "additionalProperties": false,
+      "description": "Optionen von `jekyll-relative-links` – dem Plugin, das relative Verweise auf `.md`-Quelldateien in die Adressen der gebauten Seiten umschreibt.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "`false` schaltet das Umschreiben ab. Dann zeigt jeder `.md`-Verweis im Markdown ins Leere – das Theme setzt das Umschreiben voraus."
+        },
+        "collections": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auch Collection-Dokumente umschreiben. OHNE diesen Schalter bleibt ein `.md`-Verweis in einem Collection-Dokument unverändert stehen und ist im Browser tot; Jekyll meldet dabei nichts. Die Theme-Defaults setzen ihn auf `true` – wer sie nicht lädt, setzt ihn selbst."
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Dateien, deren Verweise unangetastet bleiben (Glob-Muster relativ zur Quelle)."
+        }
+      }
     },
     "sass": {
       "type": "object",

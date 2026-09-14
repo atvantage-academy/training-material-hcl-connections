@@ -61,13 +61,13 @@
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>Änderungen am ATVANTAGE Academy Theme · HCL Connections (Academy)</title><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1789016542"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1789016542">
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1789016542">
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1789016542">
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1789016542"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1789016542">
-<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1789016542" defer></script>
-<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1789016542" defer></script>
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1789016542">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1789371756"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1789371756">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1789371756">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1789371756">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1789371756"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1789371756">
+<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1789371756" defer></script>
+<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1789371756" defer></script>
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1789371756">
 <script type="module">
   const _hlbase = "/training-material-hcl-connections/theme/academy/hljs/";
   Promise.all([import(_hlbase + "core.min.js"), import(_hlbase + "java.min.js")])
@@ -81,8 +81,8 @@
 <link rel="icon" href="/training-material-hcl-connections/theme/atvantage/assets/logo-orange.svg">
 <link rel="icon" sizes="16x16" href="/training-material-hcl-connections/theme/atvantage/assets/icon-16.png">
 
-  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1789016542">
-  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1789016542"></head><body class="avd-academy-guide">
+  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1789371756">
+  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1789371756"></head><body class="avd-academy-guide">
   <a class="avd-academy-skip-link" href="#avd-academy-content">Zum Inhalt springen</a><div class="avd-academy-metanav"><span>ATVANTAGE Academy</span>
   </div>
 
@@ -104,7 +104,7 @@
               aria-label="Farbschema umschalten">◐</button></div>
 </header>
 
-  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/">Home</a><span>/</span><a href="/training-material-hcl-connections/theme/">Theme</a><span>/</span><span aria-current="page">Änderungen am ATVANTAGE Academy Theme</span></nav><div class="avd-academy-guide-hero__meta">
+  <section class="avd-academy-guide-hero"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/">Home</a><span>/</span><span>Theme</span><span>/</span><span aria-current="page">Änderungen am ATVANTAGE Academy Theme</span></nav><div class="avd-academy-guide-hero__meta">
       <div class="avd-academy-guide-hero__tags">
       </div>
       <div class="avd-academy-guide-hero__actions">
@@ -147,6 +147,240 @@
 inkompatibel gilt und wie eingestuft wird, steht in
 <a href="https://timetoact.ghe.com/AVD-Academy-Tools/academy-theme/blob/main/AGENTS.md"><code>AGENTS.md</code></a>,
 Abschnitt „Theme-Version“.</p>
+
+<hr />
+
+<h2 id="260">2.6.0</h2>
+
+<h3 id="title--ließ-die-überschrift-ganz-verschwinden"><code>title: ""</code> ließ die Überschrift ganz verschwinden</h3>
+
+<p>Eine Seite mit einem <strong>leeren</strong> Front-Matter-<code>title</code> trug am Ende <strong>gar keine sichtbare
+Überschrift</strong> – und einen <code>&lt;title&gt;</code>, der nur aus dem Trennzeichen und dem Site-Namen
+bestand (<code>· Academy</code>). Betroffen war jede solche Seite, und <code>title: ""</code> war die
+verbreitete Schreibweise aus der Zeit, als <code>title</code> noch Pflichtfeld war.</p>
+
+<p><strong>Warum es so lange unentdeckt blieb:</strong> In Liquid ist der Leerstring <strong>truthy</strong>. Die
+Ableitung stand als</p>
+
+<pre><code>{%- assign pageTitle = page.title -%}
+{%- unless pageTitle -%}  … erste #-Überschrift …  {%- endunless -%}
+</code></pre>
+
+<p>Bei <code>title: ""</code> war <code>pageTitle</code> damit „gesetzt”, der 2.0 eingeführte Rückfall auf die
+erste <code>#</code>-Überschrift griff <strong>nicht</strong>, und die Hero-Prüfung
+auf <code>pageTitle</code> erzeugte ein leeres <code>&lt;h1&gt;&lt;/h1&gt;</code>. Die Überschrift aus dem Inhalt blieb zwar im HTML, wurde
+aber von <code>.avd-academy-guide-main &gt; h1:first-child { display: none }</code> als vermeintliches
+Duplikat ausgeblendet – die Regel, die sonst genau das doppelte Anzeigen verhindert.
+Beides zusammen ergab die leere Seitenüberschrift. Dieselbe Ursache erzeugte eine
+<strong>leere Brotkrume</strong>.</p>
+
+<p>Der Build lief dabei grün, das Schema war zufrieden, und die Seite sah auf den ersten
+Blick plausibel aus – der Fehler zeigte sich nur im Vergleich.</p>
+
+<p><strong>Behoben:</strong> Die Ableitung liegt jetzt in einem gemeinsamen Include
+<code>_includes/avd-page-title.html</code>, prüft den Leerstring <strong>ausdrücklich</strong> und setzt
+<code>pageTitle</code> auf <code>nil</code>, wenn nichts übrig bleibt. Damit funktionieren alle vorhandenen
+<code>if pageTitle</code>-Prüfungen wieder wie gedacht. <code>head.html</code> vergleicht zusätzlich gegen
+<code>''</code>, weil der <code>default</code>-Filter zwar <code>nil</code> ersetzt, ein <code>''</code> aber durchreicht.</p>
+
+<p><strong>Nebenbei entfernt: dreifache Kopie.</strong> Dieselben sechs Zeilen standen in
+<code>default.html</code>, <code>presentation.html</code> und <code>simulation.html</code>. Ein Fehler darin war ein
+Fehler an drei Stellen – und genau so ist er entstanden.</p>
+
+<p><strong>Was sich für Konsumenten ändert.</strong> Seiten mit <code>title: ""</code> zeigen ihre Überschrift
+<strong>wieder an</strong> und bekommen einen richtigen Browser-Titel. Das ist eine <strong>sichtbare
+Änderung am Ergebnis bestehender Seiten</strong> – deshalb Minor und nicht Patch. Seiten
+<strong>ohne</strong> <code>title</code> und Seiten mit <strong>gesetztem</strong> <code>title</code> bauen byte-identisch wie zuvor
+(verifiziert per Vorher/Nachher-Diff über vier Fälle; einziger Unterschied war der
+Cache-Buster). Nichts ist umzustellen: Wer <code>title: ""</code> stehen lässt, bekommt das
+Verhalten, das seit 2.0 zugesagt ist. Wer den Hero-Titel absichtlich leer halten
+möchte, hat dafür bislang kein Feld – bitte melden, dann wird daraus eines.</p>
+
+<hr />
+
+<h2 id="256">2.5.6</h2>
+
+<h3 id="mehr-host-adressen-gemessen-statt-vermutet">Mehr-Host-Adressen: gemessen statt vermutet</h3>
+
+<p>Zu 2.5.5 stand in der Doku ein Muster für Sites, die aus <strong>einem</strong> Image unter mehreren
+Adressen laufen – ein Platzhalter zur Bauzeit, den der ausliefernde Dienst je Anfrage
+ersetzt. Ein Consumer hat es nachgestellt, und die Messung hat zwei Annahmen korrigiert:</p>
+
+<ul>
+  <li><strong>Es sind zwei Werte, nicht einer.</strong> <code>jekyll-github-metadata</code> berechnet <code>url</code> <strong>und</strong>
+<code>baseurl</code>. Wer auf GHE nur <code>url</code> setzt, sieht den Abbruch bloß weiterwandern:
+<code>Error processing value 'url'</code> wird zu <code>… value 'baseurl'</code>. Erst beide zusammen bauen
+durch (ein <code>--baseurl</code> auf der Kommandozeile zählt mit). <code>head.html</code> und die Doku
+sagten bisher nur <code>url</code>.</li>
+  <li><strong>Der Platzhalter gehört in die Vorlage, nicht in <code>site.url</code>.</strong> <code>absolute_url</code>
+normalisiert die Adresse und prozentkodiert dabei die Prozentzeichen – aus <code>%%ORIGIN%%</code>
+wird <code>%25%25ORIGIN%25%25</code>, und zwar auch ohne jedes Plugin. Dieselbe Normalisierung
+schreibt klein (<code>https://ORIGIN</code> → <code>https://origin</code>). Wer einen Platzhalter dennoch
+durch den Filter schicken muss, nimmt einen Hostnamen unter der reservierten TLD
+<code>.invalid</code> (RFC 2606) – er übersteht sie unverändert, und eine ausgebliebene Ersetzung
+zeigt auf einen Namen, der nie auflösen kann.</li>
+</ul>
+
+<p>Dazu eine Einordnung, die bisher fehlte: <strong>Die GHE-Falle greift nur, wo
+<code>jekyll-github-metadata</code> überhaupt installiert ist</strong> (über das <code>github-pages</code>-Gem). Ein
+Repo, das nur <code>jekyll</code>, <code>jekyll-optional-front-matter</code> und <code>jekyll-relative-links</code> zieht,
+kann sie nicht treffen. Dass das Theme trotzdem überall relativ verweist, bleibt Absicht –
+sonst müsste jeder Consumer wissen, in welcher der beiden Welten er gerade baut.</p>
+
+<p>Nur Doku und Kommentare; am Verhalten ändert sich nichts.</p>
+
+<h2 id="255">2.5.5</h2>
+
+<h3 id="collection-dokumente-werden-geprüft--und-ihre-md-verweise-umgeschrieben">Collection-Dokumente werden geprüft – und ihre <code>.md</code>-Verweise umgeschrieben</h3>
+
+<p>Eine Jekyll-Collection (<code>collections:</code> in der <code>_config.yml</code>) lief bisher an zwei
+Prüfungen des Themes <strong>vorbei</strong>, ohne dass das irgendwo sichtbar wurde:</p>
+
+<ul>
+  <li><strong><code>validate.rb</code> übersprang sie.</strong> Unterstrich-Ordner rendert Jekyll nicht – bis auf die
+Collections. Der Prüfer nahm die Ausnahme nicht mit und meldete danach „N Seite(n)
+geprüft, keine Verstöße“, als wäre nichts übrig geblieben. Jetzt sind die in
+<code>collections:</code> erklärten Verzeichnisse ausgenommen, <code>_posts</code> immer; <code>_data</code>,
+<code>_includes</code> und <code>_layouts</code> bleiben draußen. Die Schlussmeldung nennt die
+Collection-Dokumente eigens: <code>… 34 Seite(n) (darunter 32 aus Collections) geprüft …</code>.</li>
+  <li><strong><code>jekyll-relative-links</code> fasste sie nicht an.</strong> Ein <code>[Text](../konfiguration/foo.md)</code>
+in einem Collection-Dokument blieb unverändert im HTML stehen und war im Browser tot –
+ohne Baufehler. Die Defaults setzen deshalb <code>relative_links.collections: true</code>; das
+Plugin löst den Verweis gegen den <strong>Quellpfad</strong> auf und schreibt die Adresse der
+gebauten Seite hin. In einer Collection gilt damit dieselbe Regel wie überall: im
+Markdown auf die <code>.md</code> verweisen.</li>
+</ul>
+
+<div class="avd-academy-callout avd-academy-callout--warning">
+  <p><strong>Für Repos mit Collections kann dieses Update rot werden.</strong> Front Matter, das bisher
+ungeprüft durchlief, wird ab jetzt gegen das Schema geprüft. Repo-eigene Felder brauchen
+dort – wie auf jeder Seite – das Präfix <code>x_</code> (<code>x_version</code>, <code>x_highlights</code>). Das ist der
+Zweck der Änderung: Die Prüfung sagt jetzt, was sie wirklich angeschaut hat.</p>
+
+  <p>Wer die Theme-Defaults <strong>nicht</strong> lädt (Build mit <code>_config.yml</code> + <code>_config.audience.yml</code>),
+trägt <code>relative_links: { collections: true }</code> in seine eigene <code>_config.yml</code> ein.</p>
+</div>
+
+<p>Neu im Front-Matter-Schema: <strong><code>categories</code></strong> und <strong><code>tags</code></strong> – beides liest Jekyll selbst
+(Adresse eines Beitrags, <code>site.categories</code>/<code>site.tags</code>), nicht das Theme. Ohne sie meldete
+die frisch erweiterte Prüfung jeden <code>_posts</code>-Eintrag als Tippfehler. Die Tags im Hero einer
+Seite heißen weiterhin <code>topics</code>. Im Konfigurations-Schema steht jetzt <code>relative_links</code>, und
+<code>collections</code> ist auch als Namensliste erlaubt – beides kennt Jekyll so. <strong>Die
+Schema-Versionen bleiben bei 2:</strong> nur Ergänzungen, nichts entfällt, nichts wird enger.</p>
+
+<h3 id="doku-eine-site-unter-mehreren-adressen">Doku: eine Site unter mehreren Adressen</h3>
+
+<p><code>head.html</code> begründet ausführlich, warum das Theme ausschließlich <code>relative_url</code> nutzt, und
+schloss mit „wer vollqualifizierte Verweise braucht, setzt <code>url</code> in der eigenen
+<code>_config.yml</code>“. Das trägt für eine Site unter <strong>einer</strong> Adresse. Wird dieselbe gebaute Site
+unter mehreren Hosts ausgeliefert – lokal, im Container, in der Cloud, alles aus demselben
+Image –, kann der Build die Adresse gar nicht kennen; <code>url</code> ist dort die falsche Antwort.
+Die Doku benennt den Fall jetzt und beschreibt das Muster dafür (Platzhalter zur Bauzeit,
+den der ausliefernde Dienst je Anfrage ersetzt):
+<a href="../docs/verwendung/einbindung.md#mehr-host">Einbindung → Eine Site unter mehreren Adressen</a>.</p>
+
+<h2 id="254">2.5.4</h2>
+
+<h3 id="hreflang-nennt-nur-noch-fassungen-die-es-gibt"><code>hreflang</code> nennt nur noch Fassungen, die es gibt</h3>
+
+<p><code>i18n.switch.fallback: base</code> schickt den Sprachumschalter auf die <strong>Wurzel</strong> des anderen
+Sprachbaums, wenn es die Seite dort nicht gibt – damit ein Leser überhaupt in den anderen
+Baum kommt. Als Knopf ist das richtig; <strong>als Angabe über die Seite war es falsch.</strong></p>
+
+<p>Dieser Rückfall lief bisher auch in den Kopf der Seite:</p>
+
+<pre><code class="language-html">&lt;link rel="alternate" hreflang="en" href="/en/"&gt;
+</code></pre>
+
+<p>Das behauptet, <code>/en/</code> sei die englische Fassung <strong>dieser</strong> Seite. Auf einer erst teilweise
+übersetzten Site behaupten das Hunderte Seiten gleichzeitig, und keine bekommt von <code>/en/</code>
+eine Bestätigung zurück – <code>hreflang</code> verlangt aber Gegenseitigkeit, sonst wertet eine
+Suchmaschine die Angabe ab, statt sie zu nutzen. In der Doku dieses Repos trugen <strong>20 von
+52</strong> Seiten mit Sprachangaben eine Übersetzung, die es nicht gibt; jetzt sind es <strong>null</strong>,
+und jede verbliebene Angabe zeigt zurück.</p>
+
+<p>Dieselbe Trennung gilt für die Browsersprachen-Erkennung (<code>i18n.detect</code>): Sie leitet nur
+noch dorthin um, wo es <strong>diese</strong> Seite in der bevorzugten Sprache wirklich gibt. Vorher
+verlor ein englischsprachiger Leser auf einer unübersetzten Seite genau die Seite, die er
+aufgerufen hatte, und landete auf der englischen Startseite.</p>
+
+<p><strong>Am Umschalter ändert sich nichts</strong> – der Rückfall bleibt genau da, wofür er gedacht war.
+Intern führt <code>avd-i18n.html</code> dafür zwei Listen: <code>iAlt</code> (echte Gegenstücke, gelesen von
+<code>head.html</code>) und <code>iAltSchalter</code> (echte Gegenstücke plus Rückfall, gelesen von
+<code>tools.html</code>).</p>
+
+<p><strong>Was Projekte tun müssen:</strong> nichts. Wer <code>fallback: base</code> gesetzt hat, behält den
+Umschalter und verliert nur eine Angabe, die ohnehin nicht stimmte.</p>
+
+<hr />
+
+<h2 id="253">2.5.3</h2>
+
+<p><strong>Eine Prüfung, die tote Verweise findet – und die 60 toten Verweise, die sie gefunden
+hat.</strong> Angestoßen von einem Hinweis aus demselben zweisprachigen Consumer-Repo, das
+schon 2.5.1 und 2.5.2 gemeldet hat.</p>
+
+<h3 id="neu-themejekylllinksrb">Neu: <code>theme/jekyll/links.rb</code></h3>
+
+<p>Ein Verweis ins Leere ist für Jekyll <strong>kein Baufehler</strong>. Die Seite entsteht, der Link
+ist tot, und es fällt erst beim Klicken auf – oft Wochen später und einem Leser, nicht
+dem Autor. Das Paket bringt deshalb eine Prüfung mit, die gegen das <strong>gebaute <code>_site</code></strong>
+läuft und dreierlei meldet:</p>
+
+<ul>
+  <li><strong>Ziel fehlt</strong> – das <code>href</code> trifft keine Datei. Ein Ordner ohne <code>index.html</code> gehört
+dazu: Auf GitHub Pages ist er ein 404, kein Verzeichnislisting.</li>
+  <li><strong>Anker fehlt</strong> – <code>#kapitel</code> trifft auf der Zielseite keine <code>id</code>. Geprüft im gebauten
+HTML, weil kramdown den Slug dort schon erzeugt hat. Wer ihn aus der Überschrift
+<strong>nachbaut</strong>, trifft die Umlautregel falsch und meldet <code>#löschen</code> als tot.</li>
+  <li><strong>Sprachbaum gewechselt</strong> – der Verweis führt in eine andere Sprache, <strong>obwohl es die
+Zielseite in der Sprache der verweisenden Seite gibt</strong>. Zugehörigkeit und Gegenstück
+kommen aus dem gebauten HTML (<code>&lt;html lang&gt;</code>, <code>&lt;link rel="alternate"&gt;</code>), der Befund
+nennt deshalb gleich die richtige Adresse. Ein Verweis mit <code>hreflang</code> ist Absicht und
+wird übergangen.</li>
+</ul>
+
+<p><strong>Warum gegen das Gebaute:</strong> Ein Verweis entsteht an <strong>fünf</strong> Stellen – Fließtext,
+<code>resources</code>, <code>nav</code>, Sprachkarten, <code>breadcrumb.ancestors</code> – und sieht in der Quelle jedes
+Mal anders aus. Ein Prüfer über die Quellen kennt immer nur einige davon und hat sein
+Loch genau dort, wo der echte tote Verweis steht. Im <code>_site</code> steht überall dasselbe.</p>
+
+<p><code>--baseurl</code> (derselbe Wert wie beim Bauen) und <code>--ignore «Praefix»</code> (Adressen, die erst
+die laufende Anwendung bedient) sind die beiden Angaben, die eine Site braucht. Externe
+Links prüft sie nicht: Ein Prüflauf, der aus fremden Gründen rot wird, wird
+abgeschaltet. <code>--self-test</code> prüft die Prüfung an einer Site, die jeden Befund einmal
+enthält – im eigenen Repo entstehen die interessanten Fälle nicht, und genau diese
+Blindheit hat 2.5.1 grün durchlaufen lassen.</p>
+
+<p><strong>Für Konsumenten:</strong> Beide Workflow-Vorlagen (<code>github-pages/deploy.example.yml</code>,
+<code>theme/jekyll/starter/pages.yml</code>, Vorlagenversion <strong>10</strong>) rufen die Prüfung nach dem
+Build auf. Wer eine ältere Kopie hat, zieht den Schritt nach – nötig ist er nicht.
+Doku: <a href="../github-pages/#verweise-pruefen">GitHub Pages → Tote Verweise finden</a>.</p>
+
+<h3 id="behoben-die-automatische-brotkrume-verlinkte-ordner-die-es-nicht-gibt">Behoben: die automatische Brotkrume verlinkte Ordner, die es nicht gibt</h3>
+
+<p>Die aus der Ordnerstruktur gebaute Kette verlinkte <strong>jeden</strong> Vorfahren – auch einen
+Ordner <strong>ohne <code>index</code>-Seite</strong>. <code>/docs/</code> ist auf GitHub Pages dann ein 404, und zwar auf
+jeder Seite darunter. In der Doku dieses Repos waren es <strong>56 tote Verweise</strong>, die
+niemandem aufgefallen sind, weil eine Brotkrume selten angeklickt wird.</p>
+
+<p>Ein Vorfahre ohne <code>index</code>-Seite steht jetzt als <strong>Text</strong> statt als Link; eine statische
+<code>index.html</code> zählt dabei mit. Sichtbare Folge: Diese Krumen sind nicht mehr anklickbar –
+sie waren es vorher auch nicht, sie sahen nur so aus.</p>
+
+<h3 id="behoben-vier-tote-und-37-sprachfremde-verweise-in-der-englischen-doku">Behoben: vier tote und 37 sprachfremde Verweise in der englischen Doku</h3>
+
+<p>Gefunden von der neuen Prüfung, alle aus der Übersetzung in 2.5.0:</p>
+
+<ul>
+  <li>ein Markdown-Verweis über <strong>zwei Zeilen</strong> – <code>jekyll-relative-links</code> schreibt ihn nicht
+um, und die Seite lieferte <code>href="docs/usage/quickstart.md"</code> aus;</li>
+  <li>zwei Verweise in <strong>rohem HTML</strong> (<code>&lt;a href="academy.md#…"&gt;</code>) – auch die schreibt das
+Plugin nicht um, denn es kennt nur Markdown-Syntax;</li>
+  <li>ein relativer Verweis im CHANGELOG, der eine Ebene zu hoch zeigte;</li>
+  <li>37 Verweise aus dem englischen Baum auf die <strong>deutsche</strong> Fassung einer Seite, die es
+auf Englisch gibt – samt der Klammern „(German)“, die dazu nicht mehr stimmten.</li>
+</ul>
 
 <hr />
 
@@ -382,7 +616,7 @@ Screenshots das müssen.</p>
 
 <p>Neu: <code>theme/jekyll/_includes/avd-i18n.html</code> (Sprache, Sprachfassungen, Wörterbuch),
 <code>theme/jekyll/_includes/avd-lang-value.html</code> (Sprachkarten auflösen), die Klasse
-<code>avd-academy-tool--lang</code>. Doku: <a href="docs/theme/mehrsprachigkeit.md">Mehrsprachigkeit</a>.</p>
+<code>avd-academy-tool--lang</code>. Doku: <a href="../docs/theme/mehrsprachigkeit.md">Mehrsprachigkeit</a>.</p>
 
 <hr />
 

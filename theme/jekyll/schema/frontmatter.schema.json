@@ -61,7 +61,27 @@
         "string",
         "object"
       ],
-      "description": "Jekyll-Standard: Datum der Seite (ISO-8601). YAML liest ein unquotiertes Datum als Datumsobjekt."
+      "description": "Jekyll-Standard: Datum der Seite (ISO-8601). YAML liest ein unquotiertes Datum als Datumsobjekt. In einem Collection-Dokument gehört die UHRZEIT dazu, wenn das Datum eine Reihenfolge tragen soll – zwei Dokumente mit demselben Zeitstempel sind für einen Leser sortierbar, für einen Feed-Abonnenten nicht."
+    },
+    "categories": {
+      "type": [
+        "string",
+        "array"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Jekyll-Standard: Kategorien eines Dokuments (vor allem in `_posts`). Das Theme liest sie NICHT – sie stehen hier, weil Jekyll sie selbst auswertet (Adresse, `site.categories`) und die Prüfung sie sonst als Tippfehler meldete."
+    },
+    "tags": {
+      "type": [
+        "string",
+        "array"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Jekyll-Standard: Schlagworte eines Dokuments (vor allem in `_posts`); ausgewertet von Jekyll (`site.tags`), nicht vom Theme. Die Tags im Hero einer Seite sind `topics` – nicht zu verwechseln."
     },
     "audiences": {
       "$ref": "#/definitions/zielgruppen",

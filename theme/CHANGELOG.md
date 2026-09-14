@@ -15,6 +15,234 @@ Abschnitt „Theme-Version“.
 
 ---
 
+## 2.6.0
+
+### `title: ""` ließ die Überschrift ganz verschwinden
+
+Eine Seite mit einem **leeren** Front-Matter-`title` trug am Ende **gar keine sichtbare
+Überschrift** – und einen `<title>`, der nur aus dem Trennzeichen und dem Site-Namen
+bestand (`· Academy`). Betroffen war jede solche Seite, und `title: ""` war die
+verbreitete Schreibweise aus der Zeit, als `title` noch Pflichtfeld war.
+
+**Warum es so lange unentdeckt blieb:** In Liquid ist der Leerstring **truthy**. Die
+Ableitung stand als
+
+{% raw %}
+    {%- assign pageTitle = page.title -%}
+    {%- unless pageTitle -%}  … erste #-Überschrift …  {%- endunless -%}
+{% endraw %}
+
+Bei `title: ""` war `pageTitle` damit „gesetzt", der 2.0 eingeführte Rückfall auf die
+erste `#`-Überschrift griff **nicht**, und die Hero-Prüfung
+auf `pageTitle` erzeugte ein leeres `<h1></h1>`. Die Überschrift aus dem Inhalt blieb zwar im HTML, wurde
+aber von `.avd-academy-guide-main > h1:first-child { display: none }` als vermeintliches
+Duplikat ausgeblendet – die Regel, die sonst genau das doppelte Anzeigen verhindert.
+Beides zusammen ergab die leere Seitenüberschrift. Dieselbe Ursache erzeugte eine
+**leere Brotkrume**.
+
+Der Build lief dabei grün, das Schema war zufrieden, und die Seite sah auf den ersten
+Blick plausibel aus – der Fehler zeigte sich nur im Vergleich.
+
+**Behoben:** Die Ableitung liegt jetzt in einem gemeinsamen Include
+`_includes/avd-page-title.html`, prüft den Leerstring **ausdrücklich** und setzt
+`pageTitle` auf `nil`, wenn nichts übrig bleibt. Damit funktionieren alle vorhandenen
+`if pageTitle`-Prüfungen wieder wie gedacht. `head.html` vergleicht zusätzlich gegen
+`''`, weil der `default`-Filter zwar `nil` ersetzt, ein `''` aber durchreicht.
+
+**Nebenbei entfernt: dreifache Kopie.** Dieselben sechs Zeilen standen in
+`default.html`, `presentation.html` und `simulation.html`. Ein Fehler darin war ein
+Fehler an drei Stellen – und genau so ist er entstanden.
+
+**Was sich für Konsumenten ändert.** Seiten mit `title: ""` zeigen ihre Überschrift
+**wieder an** und bekommen einen richtigen Browser-Titel. Das ist eine **sichtbare
+Änderung am Ergebnis bestehender Seiten** – deshalb Minor und nicht Patch. Seiten
+**ohne** `title` und Seiten mit **gesetztem** `title` bauen byte-identisch wie zuvor
+(verifiziert per Vorher/Nachher-Diff über vier Fälle; einziger Unterschied war der
+Cache-Buster). Nichts ist umzustellen: Wer `title: ""` stehen lässt, bekommt das
+Verhalten, das seit 2.0 zugesagt ist. Wer den Hero-Titel absichtlich leer halten
+möchte, hat dafür bislang kein Feld – bitte melden, dann wird daraus eines.
+
+---
+
+## 2.5.6
+
+### Mehr-Host-Adressen: gemessen statt vermutet
+
+Zu 2.5.5 stand in der Doku ein Muster für Sites, die aus **einem** Image unter mehreren
+Adressen laufen – ein Platzhalter zur Bauzeit, den der ausliefernde Dienst je Anfrage
+ersetzt. Ein Consumer hat es nachgestellt, und die Messung hat zwei Annahmen korrigiert:
+
+* **Es sind zwei Werte, nicht einer.** `jekyll-github-metadata` berechnet `url` **und**
+  `baseurl`. Wer auf GHE nur `url` setzt, sieht den Abbruch bloß weiterwandern:
+  `Error processing value 'url'` wird zu `… value 'baseurl'`. Erst beide zusammen bauen
+  durch (ein `--baseurl` auf der Kommandozeile zählt mit). `head.html` und die Doku
+  sagten bisher nur `url`.
+* **Der Platzhalter gehört in die Vorlage, nicht in `site.url`.** `absolute_url`
+  normalisiert die Adresse und prozentkodiert dabei die Prozentzeichen – aus `%%ORIGIN%%`
+  wird `%25%25ORIGIN%25%25`, und zwar auch ohne jedes Plugin. Dieselbe Normalisierung
+  schreibt klein (`https://ORIGIN` → `https://origin`). Wer einen Platzhalter dennoch
+  durch den Filter schicken muss, nimmt einen Hostnamen unter der reservierten TLD
+  `.invalid` (RFC 2606) – er übersteht sie unverändert, und eine ausgebliebene Ersetzung
+  zeigt auf einen Namen, der nie auflösen kann.
+
+Dazu eine Einordnung, die bisher fehlte: **Die GHE-Falle greift nur, wo
+`jekyll-github-metadata` überhaupt installiert ist** (über das `github-pages`-Gem). Ein
+Repo, das nur `jekyll`, `jekyll-optional-front-matter` und `jekyll-relative-links` zieht,
+kann sie nicht treffen. Dass das Theme trotzdem überall relativ verweist, bleibt Absicht –
+sonst müsste jeder Consumer wissen, in welcher der beiden Welten er gerade baut.
+
+Nur Doku und Kommentare; am Verhalten ändert sich nichts.
+
+## 2.5.5
+
+### Collection-Dokumente werden geprüft – und ihre `.md`-Verweise umgeschrieben
+
+Eine Jekyll-Collection (`collections:` in der `_config.yml`) lief bisher an zwei
+Prüfungen des Themes **vorbei**, ohne dass das irgendwo sichtbar wurde:
+
+* **`validate.rb` übersprang sie.** Unterstrich-Ordner rendert Jekyll nicht – bis auf die
+  Collections. Der Prüfer nahm die Ausnahme nicht mit und meldete danach „N Seite(n)
+  geprüft, keine Verstöße“, als wäre nichts übrig geblieben. Jetzt sind die in
+  `collections:` erklärten Verzeichnisse ausgenommen, `_posts` immer; `_data`,
+  `_includes` und `_layouts` bleiben draußen. Die Schlussmeldung nennt die
+  Collection-Dokumente eigens: `… 34 Seite(n) (darunter 32 aus Collections) geprüft …`.
+* **`jekyll-relative-links` fasste sie nicht an.** Ein `[Text](../konfiguration/foo.md)`
+  in einem Collection-Dokument blieb unverändert im HTML stehen und war im Browser tot –
+  ohne Baufehler. Die Defaults setzen deshalb `relative_links.collections: true`; das
+  Plugin löst den Verweis gegen den **Quellpfad** auf und schreibt die Adresse der
+  gebauten Seite hin. In einer Collection gilt damit dieselbe Regel wie überall: im
+  Markdown auf die `.md` verweisen.
+
+<div class="avd-academy-callout avd-academy-callout--warning" markdown="1">
+**Für Repos mit Collections kann dieses Update rot werden.** Front Matter, das bisher
+ungeprüft durchlief, wird ab jetzt gegen das Schema geprüft. Repo-eigene Felder brauchen
+dort – wie auf jeder Seite – das Präfix `x_` (`x_version`, `x_highlights`). Das ist der
+Zweck der Änderung: Die Prüfung sagt jetzt, was sie wirklich angeschaut hat.
+
+Wer die Theme-Defaults **nicht** lädt (Build mit `_config.yml` + `_config.audience.yml`),
+trägt `relative_links: { collections: true }` in seine eigene `_config.yml` ein.
+</div>
+
+Neu im Front-Matter-Schema: **`categories`** und **`tags`** – beides liest Jekyll selbst
+(Adresse eines Beitrags, `site.categories`/`site.tags`), nicht das Theme. Ohne sie meldete
+die frisch erweiterte Prüfung jeden `_posts`-Eintrag als Tippfehler. Die Tags im Hero einer
+Seite heißen weiterhin `topics`. Im Konfigurations-Schema steht jetzt `relative_links`, und
+`collections` ist auch als Namensliste erlaubt – beides kennt Jekyll so. **Die
+Schema-Versionen bleiben bei 2:** nur Ergänzungen, nichts entfällt, nichts wird enger.
+
+### Doku: eine Site unter mehreren Adressen
+
+`head.html` begründet ausführlich, warum das Theme ausschließlich `relative_url` nutzt, und
+schloss mit „wer vollqualifizierte Verweise braucht, setzt `url` in der eigenen
+`_config.yml`“. Das trägt für eine Site unter **einer** Adresse. Wird dieselbe gebaute Site
+unter mehreren Hosts ausgeliefert – lokal, im Container, in der Cloud, alles aus demselben
+Image –, kann der Build die Adresse gar nicht kennen; `url` ist dort die falsche Antwort.
+Die Doku benennt den Fall jetzt und beschreibt das Muster dafür (Platzhalter zur Bauzeit,
+den der ausliefernde Dienst je Anfrage ersetzt):
+[Einbindung → Eine Site unter mehreren Adressen](../docs/verwendung/einbindung.md#mehr-host).
+
+## 2.5.4
+
+### `hreflang` nennt nur noch Fassungen, die es gibt
+
+`i18n.switch.fallback: base` schickt den Sprachumschalter auf die **Wurzel** des anderen
+Sprachbaums, wenn es die Seite dort nicht gibt – damit ein Leser überhaupt in den anderen
+Baum kommt. Als Knopf ist das richtig; **als Angabe über die Seite war es falsch.**
+
+Dieser Rückfall lief bisher auch in den Kopf der Seite:
+
+```html
+<link rel="alternate" hreflang="en" href="/en/">
+```
+
+Das behauptet, `/en/` sei die englische Fassung **dieser** Seite. Auf einer erst teilweise
+übersetzten Site behaupten das Hunderte Seiten gleichzeitig, und keine bekommt von `/en/`
+eine Bestätigung zurück – `hreflang` verlangt aber Gegenseitigkeit, sonst wertet eine
+Suchmaschine die Angabe ab, statt sie zu nutzen. In der Doku dieses Repos trugen **20 von
+52** Seiten mit Sprachangaben eine Übersetzung, die es nicht gibt; jetzt sind es **null**,
+und jede verbliebene Angabe zeigt zurück.
+
+Dieselbe Trennung gilt für die Browsersprachen-Erkennung (`i18n.detect`): Sie leitet nur
+noch dorthin um, wo es **diese** Seite in der bevorzugten Sprache wirklich gibt. Vorher
+verlor ein englischsprachiger Leser auf einer unübersetzten Seite genau die Seite, die er
+aufgerufen hatte, und landete auf der englischen Startseite.
+
+**Am Umschalter ändert sich nichts** – der Rückfall bleibt genau da, wofür er gedacht war.
+Intern führt `avd-i18n.html` dafür zwei Listen: `iAlt` (echte Gegenstücke, gelesen von
+`head.html`) und `iAltSchalter` (echte Gegenstücke plus Rückfall, gelesen von
+`tools.html`).
+
+**Was Projekte tun müssen:** nichts. Wer `fallback: base` gesetzt hat, behält den
+Umschalter und verliert nur eine Angabe, die ohnehin nicht stimmte.
+
+---
+
+## 2.5.3
+
+**Eine Prüfung, die tote Verweise findet – und die 60 toten Verweise, die sie gefunden
+hat.** Angestoßen von einem Hinweis aus demselben zweisprachigen Consumer-Repo, das
+schon 2.5.1 und 2.5.2 gemeldet hat.
+
+### Neu: `theme/jekyll/links.rb`
+
+Ein Verweis ins Leere ist für Jekyll **kein Baufehler**. Die Seite entsteht, der Link
+ist tot, und es fällt erst beim Klicken auf – oft Wochen später und einem Leser, nicht
+dem Autor. Das Paket bringt deshalb eine Prüfung mit, die gegen das **gebaute `_site`**
+läuft und dreierlei meldet:
+
+* **Ziel fehlt** – das `href` trifft keine Datei. Ein Ordner ohne `index.html` gehört
+  dazu: Auf GitHub Pages ist er ein 404, kein Verzeichnislisting.
+* **Anker fehlt** – `#kapitel` trifft auf der Zielseite keine `id`. Geprüft im gebauten
+  HTML, weil kramdown den Slug dort schon erzeugt hat. Wer ihn aus der Überschrift
+  **nachbaut**, trifft die Umlautregel falsch und meldet `#löschen` als tot.
+* **Sprachbaum gewechselt** – der Verweis führt in eine andere Sprache, **obwohl es die
+  Zielseite in der Sprache der verweisenden Seite gibt**. Zugehörigkeit und Gegenstück
+  kommen aus dem gebauten HTML (`<html lang>`, `<link rel="alternate">`), der Befund
+  nennt deshalb gleich die richtige Adresse. Ein Verweis mit `hreflang` ist Absicht und
+  wird übergangen.
+
+**Warum gegen das Gebaute:** Ein Verweis entsteht an **fünf** Stellen – Fließtext,
+`resources`, `nav`, Sprachkarten, `breadcrumb.ancestors` – und sieht in der Quelle jedes
+Mal anders aus. Ein Prüfer über die Quellen kennt immer nur einige davon und hat sein
+Loch genau dort, wo der echte tote Verweis steht. Im `_site` steht überall dasselbe.
+
+`--baseurl` (derselbe Wert wie beim Bauen) und `--ignore «Praefix»` (Adressen, die erst
+die laufende Anwendung bedient) sind die beiden Angaben, die eine Site braucht. Externe
+Links prüft sie nicht: Ein Prüflauf, der aus fremden Gründen rot wird, wird
+abgeschaltet. `--self-test` prüft die Prüfung an einer Site, die jeden Befund einmal
+enthält – im eigenen Repo entstehen die interessanten Fälle nicht, und genau diese
+Blindheit hat 2.5.1 grün durchlaufen lassen.
+
+**Für Konsumenten:** Beide Workflow-Vorlagen (`github-pages/deploy.example.yml`,
+`theme/jekyll/starter/pages.yml`, Vorlagenversion **10**) rufen die Prüfung nach dem
+Build auf. Wer eine ältere Kopie hat, zieht den Schritt nach – nötig ist er nicht.
+Doku: [GitHub Pages → Tote Verweise finden](../github-pages/#verweise-pruefen).
+
+### Behoben: die automatische Brotkrume verlinkte Ordner, die es nicht gibt
+
+Die aus der Ordnerstruktur gebaute Kette verlinkte **jeden** Vorfahren – auch einen
+Ordner **ohne `index`-Seite**. `/docs/` ist auf GitHub Pages dann ein 404, und zwar auf
+jeder Seite darunter. In der Doku dieses Repos waren es **56 tote Verweise**, die
+niemandem aufgefallen sind, weil eine Brotkrume selten angeklickt wird.
+
+Ein Vorfahre ohne `index`-Seite steht jetzt als **Text** statt als Link; eine statische
+`index.html` zählt dabei mit. Sichtbare Folge: Diese Krumen sind nicht mehr anklickbar –
+sie waren es vorher auch nicht, sie sahen nur so aus.
+
+### Behoben: vier tote und 37 sprachfremde Verweise in der englischen Doku
+
+Gefunden von der neuen Prüfung, alle aus der Übersetzung in 2.5.0:
+
+* ein Markdown-Verweis über **zwei Zeilen** – `jekyll-relative-links` schreibt ihn nicht
+  um, und die Seite lieferte `href="docs/usage/quickstart.md"` aus;
+* zwei Verweise in **rohem HTML** (`<a href="academy.md#…">`) – auch die schreibt das
+  Plugin nicht um, denn es kennt nur Markdown-Syntax;
+* ein relativer Verweis im CHANGELOG, der eine Ebene zu hoch zeigte;
+* 37 Verweise aus dem englischen Baum auf die **deutsche** Fassung einer Seite, die es
+  auf Englisch gibt – samt der Klammern „(German)“, die dazu nicht mehr stimmten.
+
+---
+
 ## 2.5.2
 
 **Zwei Fehler aus 2.5.1, beide von außen gemeldet** – aus einem zweisprachigen
@@ -250,7 +478,7 @@ Screenshots das müssen.
 
 Neu: `theme/jekyll/_includes/avd-i18n.html` (Sprache, Sprachfassungen, Wörterbuch),
 `theme/jekyll/_includes/avd-lang-value.html` (Sprachkarten auflösen), die Klasse
-`avd-academy-tool--lang`. Doku: [Mehrsprachigkeit](docs/theme/mehrsprachigkeit.md).
+`avd-academy-tool--lang`. Doku: [Mehrsprachigkeit](../docs/theme/mehrsprachigkeit.md).
 
 ---
 
