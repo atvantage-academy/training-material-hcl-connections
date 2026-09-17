@@ -61,36 +61,46 @@
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>Einen Austritt sauber abwickeln · ATVANTAGE Academy</title><meta name="description" content="Alle Inhalte einer ausgeschiedenen Person sichten, eine Nachfolge bestimmen und die Reihenfolge richtig wählen."><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1789382762"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1789382762">
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1789382762">
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1789382762">
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1789382762"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1789382762">
-<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1789382762" defer></script>
-<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1789382762" defer></script>
-<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1789382762">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1789663234"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1789663234">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/base.css?v=1789663234">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/components.css?v=1789663234">
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/jekyll/site.css?v=1789663234"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/print.css?v=1789663234">
+<script src="/training-material-hcl-connections/theme/academy/atvantage.js?v=1789663234" defer></script>
+<script src="/training-material-hcl-connections/theme/jekyll/site.js?v=1789663234" defer></script>
+<link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/highlight.css?v=1789663234">
 <script type="module">
   const _hlbase = "/training-material-hcl-connections/theme/academy/hljs/";
-  Promise.all([import(_hlbase + "core.min.js"), import(_hlbase + "java.min.js")])
-    .then(([core, java]) => {
+  const _hlsprachen = ["java", "http", "json", "xml"];
+  Promise.all([import(_hlbase + "core.min.js"), ..._hlsprachen.map((s) => import(_hlbase + s + ".min.js"))])
+    .then(([core, ...grammatiken]) => {
       const hljs = core.default;
-      hljs.registerLanguage("java", java.default);
-      document.querySelectorAll("pre code.language-java").forEach((el) => hljs.highlightElement(el));
+      _hlsprachen.forEach((s, i) => hljs.registerLanguage(s, grammatiken[i].default));
+      document.querySelectorAll(_hlsprachen.map((s) => "pre code.language-" + s).join(","))
+        .forEach((el) => hljs.highlightElement(el));
+
+      /* Statuszeile nach Klasse einfaerben. highlight.js gibt jedem dreistelligen
+         Code dieselbe Klasse `hljs-number` - in einem Mitschnitt ist aber genau das
+         die Stelle, auf die man zuerst sieht: 2xx ist etwas anderes als 4xx.
+         Deshalb hier die einzige eigene Zutat, und bewusst nur diese: Die
+         Statusklassen von HTTP aendern sich nicht, das bleibt stabil. */
+      document.querySelectorAll("pre code.language-http .hljs-number").forEach((el) => {
+        const code = parseInt(el.textContent, 10);
+        if (code >= 100 && code <= 599) {
+          el.classList.add("avd-academy-http-status--" + Math.floor(code / 100) + "xx");
+        }
+      });
     });
 </script>
 <link rel="apple-touch-icon" sizes="180x180" href="/training-material-hcl-connections/theme/atvantage/assets/icon-180.png">
 <link rel="icon" href="/training-material-hcl-connections/theme/atvantage/assets/logo-orange.svg">
 <link rel="icon" sizes="16x16" href="/training-material-hcl-connections/theme/atvantage/assets/icon-16.png">
 
-  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1789382762">
-  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1789382762"></head><body class="avd-academy-guide">
+  <link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/guide.css?v=1789663234">
+  <link rel="stylesheet" href="/training-material-hcl-connections/assets/custom.css?v=1789663234"></head><body class="avd-academy-guide">
   <a class="avd-academy-skip-link" href="#avd-academy-content">Zum Inhalt springen</a><div class="avd-academy-metanav"><span>ATVANTAGE Academy</span>
   </div>
 
-  <header class="avd-academy-header"><a class="avd-academy-header__brand" href="/training-material-hcl-connections/" aria-label="Startseite">
-    <img class="avd-academy-header__logo"
-         src="/training-material-hcl-connections/assets/logo-schulung.svg"
-         alt="ATVANTAGE Academy">
-  </a>
+  <header class="avd-academy-header"><a class="avd-academy-header__brand" href="/training-material-hcl-connections/" aria-label="Startseite"><img class="avd-academy-header__logo" src="/training-material-hcl-connections/assets/logo-schulung.svg" alt="ATVANTAGE Academy"></a>
   <button class="avd-academy-btn avd-academy-btn--ghost avd-academy-header__burger" data-avd-academy-nav-toggle="#avd-academy-main-nav"
           aria-label="Navigation umschalten" aria-expanded="false">☰</button>
   <nav class="avd-academy-header__nav" id="avd-academy-main-nav">
