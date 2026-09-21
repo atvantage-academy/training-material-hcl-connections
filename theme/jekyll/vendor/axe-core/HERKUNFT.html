@@ -59,9 +59,9 @@
 --><html lang="de">
 <head>
   <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title>Connections Engagement Center (HCEC) · ATVANTAGE Academy</title><meta name="description" content="Das Intranet auf Connections-Basis betreuen – Aufbau, Rechte, Inhaltsquellen und die drei häufigsten Beschwerden."><meta property="og:site_name" content="ATVANTAGE Academy">
-<meta property="og:title" content="Connections Engagement Center (HCEC)">
-<meta property="og:description" content="Das Intranet auf Connections-Basis betreuen – Aufbau, Rechte, Inhaltsquellen und die drei häufigsten Beschwerden.">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>axe-core 4.13.0 (mitgeliefert) · ATVANTAGE Academy</title><meta property="og:site_name" content="ATVANTAGE Academy">
+<meta property="og:title" content="axe-core 4.13.0 (mitgeliefert)">
+
 <meta property="og:type" content="website"><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/training-material-hcl-connections/theme/atvantage/styles.css?v=1789992836"><link rel="stylesheet" href="/training-material-hcl-connections/theme/academy/tokens.css?v=1789992836">
@@ -122,7 +122,7 @@
           aria-label="Navigation umschalten" aria-expanded="false">☰</button><nav class="avd-academy-header__nav" id="avd-academy-main-nav">
       <a href="/training-material-hcl-connections/">Start</a>
       <a href="/training-material-hcl-connections/cat-administration/">Connections Administration Toolkit (CAT)</a>
-      <a href="/training-material-hcl-connections/engagement-center/" aria-current="page">Connections Engagement Center (HCEC)</a>
+      <a href="/training-material-hcl-connections/engagement-center/">Connections Engagement Center (HCEC)</a>
   </nav><div class="avd-academy-header__tools"><button type="button" class="avd-academy-qr" data-avd-academy-qr hidden
                 title="Diese Seite auf Deinem Smartphone öffnen"
                 aria-label="Diese Seite auf Deinem Smartphone öffnen"></button><button type="button" class="avd-academy-tool avd-academy-tool--theme avd-academy-theme-toggle" data-avd-academy-theme-toggle
@@ -130,53 +130,34 @@
               aria-label="Farbschema umschalten">◐</button></div>
 </header>
 <section class="avd-academy-guide-hero"
-           aria-labelledby="avd-academy-page-title"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/">Home</a><span>/</span><span aria-current="page">Connections Engagement Center (HCEC)</span></nav><div class="avd-academy-guide-hero__meta">
+           aria-labelledby="avd-academy-page-title"><nav class="avd-academy-guide-hero__crumbs" aria-label="Brotkrumen"><a href="/training-material-hcl-connections/">Home</a><span>/</span><span>Theme</span><span>/</span><span>Jekyll</span><span>/</span><span>Vendor</span><span>/</span><span>Axe core</span><span>/</span><span aria-current="page">axe-core 4.13.0 (mitgeliefert)</span></nav><div class="avd-academy-guide-hero__meta">
       <div class="avd-academy-guide-hero__tags">
       </div>
       <div class="avd-academy-guide-hero__actions">
       </div>
-    </div><h1 id="avd-academy-page-title">Connections Engagement Center (HCEC)</h1>
+    </div><h1 id="avd-academy-page-title">axe-core 4.13.0 (mitgeliefert)</h1>
   </section><div class="avd-academy-guide-layout">
     <main class="avd-academy-guide-main" id="avd-academy-content">
 
-<p>Das Engagement Center macht aus Connections-Inhalten ein Intranet. Wer es betreut,
-bekommt selten Fragen zum Produkt – sondern zu Seiten: „Warum sieht das so aus?“,
-„Warum sehe ich etwas anderes als meine Kollegin?“, „Warum lädt das ewig?“ Dieser
-Kurs beantwortet genau diese Fragen.</p>
+<p><strong>Woher:</strong> <a href="https://github.com/dequelabs/axe-core"><code>axe-core</code></a> von Deque Systems,
+Lizenz <strong>MPL-2.0</strong> (siehe <a href="/training-material-hcl-connections/theme/jekyll/vendor/axe-core/LICENSE"><code>LICENSE</code></a>). Unveränderte Kopie der
+veröffentlichten Datei <code>axe.min.js</code> aus dem npm-Paket <code>axe-core@4.13.0</code>.</p>
 
-<p>In diesem Kurs lernst Du, eine Engagement-Center-Seite zu lesen wie einen Bauplan:
-woraus sie besteht, woher ihre Inhalte kommen, wer sie ändern darf – und woran Du
-erkennst, warum sie sich unerwartet verhält.</p>
+<p><strong>Warum hier und nicht per npm:</strong> Dieselbe Linie wie beim QR-Code
+(<code>theme/academy/qrcode/</code>) – kein CDN, keine Installation zur Laufzeit, kein Netz
+im Prüflauf. Die Pipeline misst damit dasselbe wie der Rechner daneben, auch
+Jahre später.</p>
 
-<ul>
-  <li><a href="/training-material-hcl-connections/engagement-center/kursbeschreibung.html">Kursbeschreibung</a></li>
-</ul>
+<p><strong>Im npm-Paket:</strong> Die Datei wird mit ausgeliefert (<code>theme/package-contents.txt</code>
+führt sie), weil dieselbe Prüfung in den Schulungs-Repos über die zentrale
+didaktikon-Action läuft – die kennt nur <code>theme/</code>. Jekyll rendert sie nicht: Der
+Ordner <code>vendor</code> steht in der <code>exclude</code>-Liste des Themes.</p>
 
-<h2 id="kursmaterial">Kursmaterial</h2>
-
-<p>Die Unterlagen bauen aufeinander auf – so, wie wir sie im Kurs durchgehen. Links
-stehen die <strong>Übungen</strong>, an denen Du selbst arbeitest.</p>
-
-<div class="avd-academy-topic">
-
-  <h3 id="engagement-center-verstehen-und-betreuen">Engagement Center verstehen und betreuen</h3>
-
-  <div class="avd-academy-materials">
-
-    <div class="avd-academy-materials__col">
-
-      <p class="avd-academy-materials__head">Übungen</p>
-
-      <ul>
-        <li><a href="/training-material-hcl-connections/engagement-center/hcec-grundlagen/issue.html" class="avd-academy-doclink avd-academy-doclink--guide">Eine XCC-Seite auseinandernehmen</a></li>
-      </ul>
-
-    </div>
-
-  </div>
-
-</div>
-
+<p><strong>Erneuern:</strong> <code>npm pack axe-core@«version»</code>, daraus <code>axe.min.js</code> und <code>LICENSE</code>
+hierher kopieren, die Version oben nachziehen, <code>theme/jekyll/a11y.sh</code> einmal laufen
+lassen. Eine neue Fassung kann zusätzliche Regeln mitbringen – dann wird der
+Lauf rot, ohne dass sich am Theme etwas geändert hat. Das ist gewollt: Die Regel
+war vorher schon verletzt, nur ungemessen.</p>
 
 
     </main><aside class="avd-academy-guide-sidebar"><details class="avd-academy-guide-side avd-academy-guide-side--toc avd-academy-fold" data-avd-academy-toc-box
@@ -184,10 +165,6 @@ stehen die <strong>Übungen</strong>, an denen Du selbst arbeitest.</p>
         <summary class="avd-academy-guide-side__label">Auf dieser Seite</summary>
         <nav class="avd-academy-toc avd-academy-fold__body" data-avd-academy-toc aria-label="Inhaltsverzeichnis"></nav>
       </details>
-      <div class="avd-academy-guide-side avd-academy-guide-side--bordered">
-        <div class="avd-academy-guide-side__label">Weiterführende Informationen</div>
-        <div class="avd-academy-guide-side__links"><a href="https://opensource.hcltechsw.com/connections-doc/v8/connectors/icec/icec_welcome.html" target="_blank" rel="noopener"><span>Engagement Center – Produktdokumentation</span></a><a href="https://opensource.hcltechsw.com/connections-doc/v8/connectors/icec/cec-widgets.html" target="_blank" rel="noopener"><span>Liste der verfügbaren Widgets</span></a>
-        </div></div>
     </aside>
   </div><div class="avd-academy-print-contact" aria-hidden="true">
     <span>Kontakt: https://academy.atvantage-academy.workers.dev/</span>
